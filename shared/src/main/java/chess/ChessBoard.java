@@ -24,7 +24,9 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        gameBoard[position.getRow() - 1][position.getColumn() - 1] = piece;
+        if(position.getRow()  > 0 && position.getRow() < 9 && position.getColumn() > 0 && position.getColumn() < 9){
+            gameBoard[position.getRow() - 1][position.getColumn() - 1] = piece;
+        }
     }
 
     /**
@@ -52,9 +54,9 @@ public class ChessBoard {
         }
 
         //Set up Rooks
-        addPiece(new ChessPosition(1, 0), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(1, 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(1, 8), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
-        addPiece(new ChessPosition(8, 0), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(8, 1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(8, 8), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
 
         // Set up Knights
