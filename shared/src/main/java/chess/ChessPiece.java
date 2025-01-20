@@ -1,12 +1,10 @@
 package chess;
 
-import chess.calculator.BishopMovesCalculator;
-import chess.calculator.PawnMovesCalculator;
-import chess.calculator.PieceMovesCalculator;
-import chess.calculator.RookMovesCalculator;
+import chess.calculator.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -75,6 +73,17 @@ public class ChessPiece {
         if (this.pieceType == PieceType.BISHOP) {
             calculator = new BishopMovesCalculator();
             return calculator.pieceMoves(board, myPosition, this.teamColor);
+        }
+        if (this.pieceType == PieceType.KING) {
+            calculator = new KingMovesCalculator();
+            return calculator.pieceMoves(board, myPosition, this.teamColor);
+        }
+        if (this.pieceType == PieceType.QUEEN) {
+            calculator = new RookMovesCalculator();
+            List<ChessMove> queenMoves = new ArrayList<>(calculator.pieceMoves(board, myPosition, this.teamColor));
+            calculator = new BishopMovesCalculator();
+            queenMoves.addAll(calculator.pieceMoves(board, myPosition, this.teamColor));
+            return queenMoves;
         }
         return new ArrayList<>();
     }
