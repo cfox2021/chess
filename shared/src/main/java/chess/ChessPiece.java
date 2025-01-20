@@ -1,6 +1,12 @@
 package chess;
 
+import chess.calculator.PawnMovesCalculator;
+import chess.calculator.PieceMovesCalculator;
+import chess.calculator.RookMovesCalculator;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -12,6 +18,7 @@ public class ChessPiece {
 
     ChessGame.TeamColor teamColor;
     PieceType pieceType;
+    ChessPosition position;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.teamColor = pieceColor;
@@ -45,6 +52,20 @@ public class ChessPiece {
         return pieceType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return teamColor == that.teamColor && pieceType == that.pieceType && Objects.equals(position, that.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamColor, pieceType, position);
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -53,6 +74,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        PieceMovesCalculator calculator;
+
+        if (this.pieceType == PieceType.PAWN) {
+            calculator = new PawnMovesCalculator();
+            return calculator.pieceMoves(board, myPosition, this.teamColor);
+        }
+        if (this.pieceType == PieceType.ROOK) {
+            calculator = new RookMovesCalculator();
+            return calculator.pieceMoves(board, myPosition, this.teamColor);
+        }
+        return new ArrayList<>();
     }
 }
