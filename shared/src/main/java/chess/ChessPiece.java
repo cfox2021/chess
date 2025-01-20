@@ -85,6 +85,10 @@ public class ChessPiece {
             queenMoves.addAll(calculator.pieceMoves(board, myPosition, this.teamColor));
             return queenMoves;
         }
+        if (this.pieceType == PieceType.KNIGHT) {
+            calculator = new KnightMovesCalculator();
+            return calculator.pieceMoves(board, myPosition, this.teamColor);
+        }
         return new ArrayList<>();
     }
 
