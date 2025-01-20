@@ -1,5 +1,6 @@
 package chess;
 
+import chess.calculator.BishopMovesCalculator;
 import chess.calculator.PawnMovesCalculator;
 import chess.calculator.PieceMovesCalculator;
 import chess.calculator.RookMovesCalculator;
@@ -52,19 +53,6 @@ public class ChessPiece {
         return pieceType;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ChessPiece that = (ChessPiece) o;
-        return teamColor == that.teamColor && pieceType == that.pieceType && Objects.equals(position, that.position);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(teamColor, pieceType, position);
-    }
 
     /**
      * Calculates all the positions a chess piece can move to
@@ -84,6 +72,24 @@ public class ChessPiece {
             calculator = new RookMovesCalculator();
             return calculator.pieceMoves(board, myPosition, this.teamColor);
         }
+        if (this.pieceType == PieceType.BISHOP) {
+            calculator = new BishopMovesCalculator();
+            return calculator.pieceMoves(board, myPosition, this.teamColor);
+        }
         return new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return teamColor == that.teamColor && pieceType == that.pieceType && Objects.equals(position, that.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamColor, pieceType, position);
     }
 }
