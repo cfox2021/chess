@@ -70,6 +70,7 @@ public class ChessGame {
                 }
                 gameBoard.addPiece(move.getEndPosition(), piece);
                 gameBoard.addPiece(move.getStartPosition(), null);
+                currentPlayer = TeamColor.WHITE == piece.getTeamColor() ? TeamColor.BLACK : TeamColor.WHITE;
             }
             else{
                 throw new InvalidMoveException();
