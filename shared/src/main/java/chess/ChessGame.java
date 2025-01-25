@@ -53,7 +53,6 @@ public class ChessGame {
             return gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition);
         }
         return null;
-
     }
 
     /**
@@ -63,7 +62,22 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = gameBoard.getPiece(move.getStartPosition());
+        if(piece != null){
+            if (validMoves(move.getStartPosition()).contains(move)) {
+                if(move.getPromotionPiece() != null){
+                    piece.pieceType = move.getPromotionPiece();
+                }
+                gameBoard.addPiece(move.getEndPosition(), piece);
+                gameBoard.addPiece(move.getStartPosition(), null);
+            }
+            else{
+                throw new InvalidMoveException();
+            }
+        }
+        else{
+            throw new InvalidMoveException();
+        }
     }
 
     /**
