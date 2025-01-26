@@ -23,6 +23,11 @@ public class ChessPiece {
         this.teamColor = pieceColor;
         this.pieceType = type;
     }
+    public ChessPiece(ChessPiece pieceToCopy) {
+        this.teamColor = pieceToCopy.teamColor;
+        this.pieceType = pieceToCopy.pieceType;
+        this.position = pieceToCopy.position;
+    }
 
     /**
      * The various different chess piece options
