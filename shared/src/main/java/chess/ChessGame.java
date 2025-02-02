@@ -191,8 +191,9 @@ public class ChessGame {
     private boolean isBoardInCheck(ChessBoard board, TeamColor color){
         for (int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
-                if(board.getPiece(new ChessPosition(i,j)) != null && board.getPiece(new ChessPosition(i,j)).getTeamColor() != color){
-                    for(ChessMove move : validMoves(new ChessPosition(i,j))){
+                ChessPiece checkPiece = board.getPiece(new ChessPosition(i, j));
+                if(checkPiece != null && checkPiece.getTeamColor() != color){
+                    for(ChessMove move : checkPiece.pieceMoves(board, checkPiece.getPosition())){
                         if (board.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(move.getEndPosition()).getTeamColor() == color){
                             return true;
                         }
