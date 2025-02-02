@@ -56,6 +56,11 @@ public class ChessPiece {
         return pieceType;
     }
 
+    public void setPieceType(PieceType type){
+        pieceType = type;
+    }
+
+
     public ChessPosition getPosition(){
         return position;
     }
