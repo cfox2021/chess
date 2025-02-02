@@ -56,6 +56,10 @@ public class ChessPiece {
         return pieceType;
     }
 
+    public ChessPosition getPosition(){
+        return position;
+    }
+
 
     /**
      * Calculates all the positions a chess piece can move to
