@@ -26,7 +26,12 @@ public class ChessPiece {
     public ChessPiece(ChessPiece pieceToCopy) {
         this.teamColor = pieceToCopy.teamColor;
         this.pieceType = pieceToCopy.pieceType;
-        this.position = pieceToCopy.position;
+        if(pieceToCopy.position != null) {
+            this.position = new ChessPosition(pieceToCopy.getPosition().getRow(), pieceToCopy.getPosition().getColumn());
+        }
+        else{
+            this.position = null;
+        }
     }
 
     @Override

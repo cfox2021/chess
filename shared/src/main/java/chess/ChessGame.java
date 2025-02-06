@@ -125,14 +125,23 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        Collection<ChessMove> kingPositions = new ArrayList<>();
+        Collection<ChessMove> piecePositions = new ArrayList<>();
         ChessBoard checkBoard;
         if (isInCheck(teamColor)) {
             for (int i = 1; i < 9; i++){
                 for (int j = 1; j < 9; j++){
-                    if(getBoard().getPiece(new ChessPosition(i,j)) != null && getBoard().getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor && getBoard().getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING){
-                        kingPositions = validMoves(new ChessPosition(i,j));
+                    if(getBoard().getPiece(new ChessPosition(i,j)) != null && getBoard().getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor){
+                        piecePositions = validMoves(new ChessPosition(i,j));
+                        for (ChessMove move : piecePositions) {
+                            checkBoard = new ChessBoard(getBoard());
+                            checkBoard.addPiece(move.getEndPosition(), checkBoard.getPiece(move.getStartPosition()));
+                            checkBoard.addPiece(move.getStartPosition(), null);
+                            if(!isBoardInCheck(checkBoard, teamColor)){
+                                return false;
+                            }
+                        }
                     }
+
                 }
             }
         }
@@ -140,14 +149,6 @@ public class ChessGame {
             return false;
         }
 
-        for (ChessMove move : kingPositions) {
-            checkBoard = new ChessBoard(getBoard());
-            checkBoard.addPiece(move.getEndPosition(), checkBoard.getPiece(move.getStartPosition()));
-            checkBoard.addPiece(move.getStartPosition(), null);
-            if(!isBoardInCheck(checkBoard, teamColor)){
-                return false;
-            }
-        }
         return true;
 
     }
@@ -191,6 +192,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
+
         return gameBoard;
     }
 

@@ -18,7 +18,7 @@ public class ChessBoard {
     private ChessPiece[][] gameBoard = new ChessPiece[8][8];
 
     public ChessBoard() {
-
+        resetBoard();
     }
     public ChessBoard(ChessBoard gameBoardToCopy) {
         this.gameBoard = new ChessPiece[8][8];
@@ -49,7 +49,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return gameBoard[position.getRow() - 1][position.getColumn() - 1];
+        if(position.getRow() > 0 && position.getColumn() > 0 && position.getRow() < 9 && position.getColumn() < 9)
+            return gameBoard[position.getRow() - 1][position.getColumn() - 1];
+        return null;
     }
 
     /**
@@ -57,6 +59,7 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        gameBoard = new ChessPiece[8][8];
         for(int i = 1; i < 9 ; i++){
             addPiece(new ChessPosition(2,i), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
             addPiece(new ChessPosition(7,i), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
