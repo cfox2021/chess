@@ -15,7 +15,8 @@ public class ChessGame {
     private ChessBoard gameBoard;
 
     public ChessGame() {
-
+        setBoard(new ChessBoard());
+        currentPlayer = TeamColor.WHITE;
     }
 
     /**
