@@ -19,7 +19,7 @@ public class MemoryUserDAO implements UserDAO {
             return userDataBase.get(username);
         }
         else{
-            throw new DataAccessException("User \"" + username + "\" already exists");
+            throw new DataAccessException("User \"" + username + "\" not found");
         }
     }
 

@@ -44,7 +44,7 @@ public class UserService {
         return loginResult;
     }
 
-    public void logout(LogoutRequest logoutRequest) {
-
+    public void logout(LogoutRequest logoutRequest) throws DataAccessException {
+        authDAO.RemoveAuthData(logoutRequest.authToken());
     }
 }
