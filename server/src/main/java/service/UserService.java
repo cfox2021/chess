@@ -55,4 +55,7 @@ public class UserService {
         authDAO.removeAuthData(logoutRequest.authToken());
     }
 
+    public void clear(){
+        userDAO.removeAllUserData();
+    }
 }

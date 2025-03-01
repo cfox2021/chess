@@ -34,5 +34,8 @@ public class GameService {
         authDAO.getAuthData(authToken);
     }
 
-
+    public void clear(){
+        gameDAO.removeAllGameData();
+        authDAO.removeAllAuthData();
+    }
 }

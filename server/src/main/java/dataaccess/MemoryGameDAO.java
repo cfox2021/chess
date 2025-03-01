@@ -63,8 +63,10 @@ public class MemoryGameDAO implements GameDAO {
         return db.getGameData().values();
     }
 
-    public void removeAllGameData(String gameID) {
+    public void removeAllGameData() {
         db.getGameData().clear();
+        db.getGameNames().clear();
+        db.setGameNum(0);
     }
 
 

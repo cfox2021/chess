@@ -5,6 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import model.AuthData;
 import model.GameData;
+import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,5 +81,21 @@ public class GameServiceTest {
         gameService.joinGame("123", "white", 1, "chaddicus");
         gameService.joinGame("456", "black", 1, "squibler145");
         Assertions.assertEquals(expected, db.getGameData().get("1"));
+    }
+
+    @Test
+    public void testClear(){
+        db.getAuthData().put("123",new AuthData("steve", "123"));
+        db.getAuthUsers().add("steve");
+        db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
+        db.getGameNames().add("theChessGame");
+        gameService.clear();
+        Assertions.assertTrue(db.getAuthData().isEmpty() && db.getAuthUsers().isEmpty() && db.getGameData().isEmpty() && db.getGameNames().isEmpty());
+    }
+
+    @Test
+    public void testClearAlreadyEmpty(){
+        gameService.clear();
+        Assertions.assertTrue(db.getAuthData().isEmpty() && db.getAuthUsers().isEmpty() && db.getGameData().isEmpty() && db.getGameNames().isEmpty());
     }
 }

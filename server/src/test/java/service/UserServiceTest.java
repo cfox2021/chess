@@ -12,12 +12,12 @@ public class UserServiceTest {
 
     private UserService userService;
     private LoginResult expected;
-
+    private DataBase db = DataBase.getInstance();
 
     @BeforeEach
     public void setUp() {
         userService = new UserService();
-        DataBase db = DataBase.getInstance();
+
         db.getUserData().clear();
         db.getAuthData().clear();
         db.getAuthUsers().clear();
@@ -85,6 +85,20 @@ public class UserServiceTest {
             userService.logout(new LogoutRequest("mr.Sneaky"));
         });
     }
+
+    @Test
+    public void testClear(){
+        db.getUserData().put("steve",new UserData("steve", "steve", "steve@steve.steve"));
+        userService.clear();
+        Assertions.assertTrue(db.getUserData().isEmpty());
+    }
+
+    @Test
+    public void testClearAlreadyEmpty(){
+        userService.clear();
+        Assertions.assertTrue(db.getUserData().isEmpty());
+    }
+
 
 
 }
