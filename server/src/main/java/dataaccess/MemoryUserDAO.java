@@ -8,28 +8,34 @@ import java.util.Collection;
 
 public class MemoryUserDAO implements UserDAO {
 
-    private Map<String, UserData> userDataBase;
+    private DataBase db = DataBase.getInstance();
 
     public MemoryUserDAO() {
-        userDataBase = new HashMap<>();
     }
 
-    public UserData GetUserData(String username) throws DataAccessException {
-        if(userDataBase.containsKey(username)){
-            return userDataBase.get(username);
+    @Override
+    public UserData getUserData(String username) throws DataAccessException {
+        if(db.getUserData().containsKey(username)){
+            return db.getUserData().get(username);
         }
         else{
             throw new DataAccessException("User \"" + username + "\" not found");
         }
     }
 
-    public void AddUserData(UserData userData) throws DataAccessException {
+    @Override
+    public void addUserData(UserData userData) throws DataAccessException {
 
-        if (!userDataBase.containsKey(userData.username())) {
-            userDataBase.put(userData.username(), userData);
+        if (!db.getUserData().containsKey(userData.username())) {
+            db.getUserData().put(userData.username(), userData);
         }
         else{
             throw new DataAccessException("User \"" + userData.username() + "\" already exists");
         }
+    }
+
+    @Override
+    public void removeAllUserData() {
+        db.getUserData().clear();
     }
 }

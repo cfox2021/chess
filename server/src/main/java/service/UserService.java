@@ -22,9 +22,13 @@ public class UserService {
     public LoginResult register(RegisterRequest registerRequest) throws DataAccessException {
         LoginResult registerResult = null;
         LoginRequest loginRequest = new LoginRequest(registerRequest.username(), registerRequest.password());
-        if (login(loginRequest) == null){
+        try{
+            userDAO.getUserData(loginRequest.username());
+            throw new DataAccessException("UserData already exists");
+        }
+        catch(Exception e){
             UserData userData = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
-            userDAO.AddUserData(userData);
+            userDAO.addUserData(userData);
             registerResult = login(loginRequest);
         }
         return registerResult;
@@ -32,19 +36,23 @@ public class UserService {
 
     public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
         LoginResult loginResult = null;
-        UserData userData = userDAO.GetUserData(loginRequest.username());
+        UserData userData = userDAO.getUserData(loginRequest.username());
         if(userData != null) {
             if(loginRequest.password().equals(userData.password())) {
                 String authToken = UUID.randomUUID().toString();
                 AuthData authData = new AuthData(loginRequest.username(), authToken);
-                authDAO.AddAuthData(authData);
+                authDAO.addAuthData(authData);
                 loginResult = new LoginResult(userData.username(), authToken);
+            }
+            else{
+                throw new DataAccessException("Password is Incorrect");
             }
         }
         return loginResult;
     }
 
     public void logout(LogoutRequest logoutRequest) throws DataAccessException {
-        authDAO.RemoveAuthData(logoutRequest.authToken());
+        authDAO.removeAuthData(logoutRequest.authToken());
     }
+
 }

@@ -19,16 +19,16 @@ public class MemoryUserDAOTest {
     @Test
     public void testAddNewUser() throws DataAccessException {
         UserData expected = new UserData("tractor13", "password", "notNull@gmail.com");
-        userDAO.AddUserData(new UserData("tractor13", "password", "notNull@gmail.com"));
-        Assertions.assertEquals(expected, userDAO.GetUserData("tractor13"));
+        userDAO.addUserData(new UserData("tractor13", "password", "notNull@gmail.com"));
+        Assertions.assertEquals(expected, userDAO.getUserData("tractor13"));
     }
 
     @Test
     public void testAddUserAlreadyExists() throws DataAccessException {
-        userDAO.AddUserData(new UserData("tractor13", "password", "notNull@gmail.com"));
+        userDAO.addUserData(new UserData("tractor13", "password", "notNull@gmail.com"));
 
         Assertions.assertThrows(DataAccessException.class, ()->{
-            userDAO.AddUserData(new UserData("tractor13", "password", "notNull@gmail.com"));
+            userDAO.addUserData(new UserData("tractor13", "password", "notNull@gmail.com"));
         });
     }
 

@@ -2,41 +2,53 @@ package dataaccess;
 
 import model.AuthData;
 
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryAuthDAO implements AuthDAO {
 
-    private Map<String, AuthData> authDataBase;
+    private DataBase db = DataBase.getInstance();
 
     public MemoryAuthDAO() {
-        authDataBase = new HashMap<>();
     }
 
-    public AuthData GetAuthData(String token) throws DataAccessException {
-        if(authDataBase.containsKey(token)){
-            return authDataBase.get(token);
+    @Override
+    public AuthData getAuthData(String token) throws DataAccessException {
+        if(db.getAuthData().containsKey(token)) {
+            return db.getAuthData().get(token);
+        }
+        else{
+            throw new DataAccessException("AuthData not found");
+        }
+    }
+
+    @Override
+    public void addAuthData(AuthData authData) throws DataAccessException {
+        if(!db.getAuthData().containsKey(authData.authToken()) && !db.getAuthUsers().contains(authData.username())) {
+            db.getAuthData().put(authData.authToken(), authData);
+            db.getAuthUsers().add(authData.username());
         }
         else{
             throw new DataAccessException("AuthData already exists");
         }
     }
 
-    public void AddAuthData(AuthData authData) throws DataAccessException {
-        if(!authDataBase.containsKey(authData.authToken())) {
-            authDataBase.put(authData.authToken(), authData);
+    @Override
+    public void removeAuthData(String token) throws DataAccessException {
+        if(db.getAuthData().containsKey(token)){
+            db.getAuthUsers().remove(db.getAuthData().get(token).username());
+            db.getAuthData().remove(token);
+
         }
         else{
             throw new DataAccessException("AuthData not found");
         }
     }
 
-    public void RemoveAuthData(String token) throws DataAccessException {
-        if(authDataBase.containsKey(token)){
-            authDataBase.remove(token);
-        }
-        else{
-            throw new DataAccessException("AuthData not found");
-        }
+    @Override
+    public void removeAllAuthData() {
+        db.getAuthData().clear();
+        db.getAuthUsers().clear();
     }
 }
