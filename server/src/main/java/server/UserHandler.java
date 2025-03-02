@@ -2,9 +2,7 @@ package server;
 
 import dataaccess.DataAccessException;
 import model.UserData;
-import service.LoginRequest;
-import service.LoginResult;
-import service.UserService;
+import service.*;
 import com.google.gson.Gson;
 import spark.*;
 
@@ -22,6 +20,23 @@ public class UserHandler {
         LoginResult loginResult = userService.login(loginRequest);
         res.status(200);
         return gson.toJson(loginResult);
+    }
+
+    public Object register(Request req, Response res) throws DataAccessException {
+        Gson gson = new Gson();
+        System.out.println("Received JSON: " + req.body());
+        RegisterRequest registerRequest = gson.fromJson(req.body(), RegisterRequest.class);
+        LoginResult registerResult = userService.register(registerRequest);
+        res.status(200);
+        return gson.toJson(registerResult);
+    }
+
+    public Object logout(Request req, Response res) throws DataAccessException {
+        Gson gson = new Gson();
+        LogoutRequest logoutRequest = gson.fromJson(req.body(), LogoutRequest.class);
+        userService.logout(logoutRequest);
+        res.status(200);
+        return gson.toJson(null);
     }
 
 
