@@ -25,13 +25,14 @@ public class MemoryAuthDAO implements AuthDAO {
 
     @Override
     public void addAuthData(AuthData authData) throws DataAccessException {
-        if(!db.getAuthData().containsKey(authData.authToken()) && !db.getAuthUsers().contains(authData.username())) {
-            db.getAuthData().put(authData.authToken(), authData);
-            db.getAuthUsers().add(authData.username());
+        for (AuthData auth : db.getAuthData().values()) {
+            if (auth.username().equals(authData.username())) {
+                removeAuthData(auth.authToken());
+            }
         }
-        else{
-            throw new DataAccessException("AuthData already exists");
-        }
+        db.getAuthData().put(authData.authToken(), authData);
+        db.getAuthUsers().add(authData.username());
+
     }
 
     @Override
@@ -51,4 +52,5 @@ public class MemoryAuthDAO implements AuthDAO {
         db.getAuthData().clear();
         db.getAuthUsers().clear();
     }
+
 }

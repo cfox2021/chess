@@ -19,7 +19,9 @@ public class UserHandler {
 
     public Object login(Request req, Response res) throws DataAccessException {
         Gson gson = new Gson();
+        System.out.println("Received JSON: " + req.body());
         LoginRequest loginRequest = gson.fromJson(req.body(), LoginRequest.class);
+        System.out.println("loginRequest: " + loginRequest);
         LoginResult loginResult = userService.login(loginRequest);
         res.status(200);
         return gson.toJson(loginResult);
@@ -27,9 +29,7 @@ public class UserHandler {
 
     public Object register(Request req, Response res) throws DataAccessException {
         Gson gson = new Gson();
-        System.out.println("Received JSON: " + req.body());
         RegisterRequest registerRequest = gson.fromJson(req.body(), RegisterRequest.class);
-        System.out.println("registerRequest: " + registerRequest);
         if(registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {
             res.status(400);
             return gson.toJson(Map.of("message", "Error: bad request"));

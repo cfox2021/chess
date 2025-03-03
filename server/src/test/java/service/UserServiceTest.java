@@ -58,14 +58,11 @@ public class UserServiceTest {
 
     @Test
     public void testLoginUserAlreadyLoggedIn() throws DataAccessException {
-        RegisterRequest registerRequest = new RegisterRequest("Tangerine", "1313", "thervius.gervine@yahoo.com");
-        LoginRequest loginRequest = new LoginRequest("Tangerine", "1313");
-
-        userService.register(registerRequest);
-
-        Assertions.assertThrows(DataAccessException.class, ()->{
-            userService.login(loginRequest);
-        });
+        expected = new LoginResult("Sprocket441", "");
+        userService.userDAO.addUserData(new UserData("Sprocket441", "cantGuessThis", "testingathing@sot.org"));
+        LoginResult actual = userService.login(new LoginRequest("Sprocket441", "cantGuessThis"));
+        actual = userService.login(new LoginRequest("Sprocket441", "cantGuessThis"));
+        Assertions.assertEquals(expected.username(), actual.username());
     }
 
     @Test
