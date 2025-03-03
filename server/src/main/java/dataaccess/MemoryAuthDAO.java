@@ -25,11 +25,13 @@ public class MemoryAuthDAO implements AuthDAO {
 
     @Override
     public void addAuthData(AuthData authData) throws DataAccessException {
+        /*
         for (AuthData auth : db.getAuthData().values()) {
             if (auth.username().equals(authData.username())) {
                 removeAuthData(auth.authToken());
             }
         }
+        */
         db.getAuthData().put(authData.authToken(), authData);
         db.getAuthUsers().add(authData.username());
 

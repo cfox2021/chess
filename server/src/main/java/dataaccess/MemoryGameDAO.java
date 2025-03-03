@@ -38,21 +38,27 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     public boolean addPlayer(String color, int gameID, String authToken) {
-        GameData oldGameData = db.getGameData().get(String.valueOf(gameID));
-        GameData newGameData;
-        System.out.println("oldGameData: " + oldGameData + "\n");
-        String username = db.getAuthData().get(authToken).username();
-        if(color != null && color.equals("WHITE") && oldGameData.whiteUsername() == null){
-            newGameData = new GameData(oldGameData.gameID(), username, oldGameData.blackUsername(), oldGameData.gameName(), oldGameData.game());
-        }
-        else if(color != null && color.equals("BLACK") && oldGameData.blackUsername() == null){
-            newGameData = new GameData(oldGameData.gameID(), oldGameData.whiteUsername(), username, oldGameData.gameName(), oldGameData.game());
+        if(db.getGameData().containsKey(String.valueOf(gameID))) {
+            GameData oldGameData = db.getGameData().get(String.valueOf(gameID));
+            GameData newGameData;
+            System.out.println("oldGameData: " + oldGameData + "\n");
+            String username = db.getAuthData().get(authToken).username();
+            if(color != null && color.equals("WHITE") && oldGameData.whiteUsername() == null){
+                newGameData = new GameData(oldGameData.gameID(), username, oldGameData.blackUsername(), oldGameData.gameName(), oldGameData.game());
+            }
+            else if(color != null && color.equals("BLACK") && oldGameData.blackUsername() == null){
+                newGameData = new GameData(oldGameData.gameID(), oldGameData.whiteUsername(), username, oldGameData.gameName(), oldGameData.game());
+            }
+            else{
+                return false;
+            }
+            updateGameData(newGameData);
+            return true;
         }
         else{
             return false;
         }
-        updateGameData(newGameData);
-        return true;
+
     }
 
     public void updateGameData(GameData gameData) {
