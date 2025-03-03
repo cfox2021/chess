@@ -69,7 +69,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         }
     }
 
-    private void checkPawnCanCapture(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color, List<ChessMove> validMoves, int rowBeforePromotion, ChessPosition diagonalRightStep) {
+    private void checkPawnCanCapture(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color,
+                                     List<ChessMove> validMoves, int rowBeforePromotion, ChessPosition diagonalRightStep) {
         if (isValidSpace(diagonalRightStep) && spaceOccupiedByOpponent(board, diagonalRightStep, color)) {
             checkPawnCanPromote(myPosition, validMoves, rowBeforePromotion, diagonalRightStep);
         }

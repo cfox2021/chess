@@ -49,7 +49,8 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         return validMoves;
     }
 
-    private boolean checkIsValidMove(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color, List<ChessMove> validMoves, ChessPosition spaceToMoveTo) {
+    private boolean checkIsValidMove(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color,
+                                     List<ChessMove> validMoves, ChessPosition spaceToMoveTo) {
         if (isValidSpace(spaceToMoveTo)) {
             if (spaceEmpty(board, spaceToMoveTo) || spaceOccupiedByOpponent(board, spaceToMoveTo, color)) {
                 validMoves.add(new ChessMove(myPosition, spaceToMoveTo, null));

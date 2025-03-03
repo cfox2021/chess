@@ -14,7 +14,8 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 spaceToMoveTo = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + j);
-                if (spaceToMoveTo != myPosition && isValidSpace(spaceToMoveTo) && (spaceEmpty(board, spaceToMoveTo) || spaceOccupiedByOpponent(board, spaceToMoveTo, color))) {
+                if (spaceToMoveTo != myPosition && isValidSpace(spaceToMoveTo) && (spaceEmpty(board, spaceToMoveTo)
+                        || spaceOccupiedByOpponent(board, spaceToMoveTo, color))) {
                     validMoves.add(new ChessMove(myPosition, spaceToMoveTo, null));
                 }
             }

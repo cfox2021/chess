@@ -57,7 +57,8 @@ public class GameHandler {
         Gson gson = new Gson();
         String authToken = req.headers("authorization");
         JoinGameRequest request = gson.fromJson(req.body(), JoinGameRequest.class);
-        if (authToken == null || request.playerColor() == null || !(request.playerColor().equals("WHITE") || request.playerColor().equals("BLACK")) || request.gameID() < 1) {
+        if (authToken == null || request.playerColor() == null || !(request.playerColor().equals("WHITE")
+                || request.playerColor().equals("BLACK")) || request.gameID() < 1) {
             res.status(400);
             return gson.toJson(Map.of("message", "Error: bad request"));
         }
