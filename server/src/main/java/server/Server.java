@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.JsonObject;
 import spark.*;
 
 public class Server {
@@ -16,7 +17,12 @@ public class Server {
         Spark.post("/user", userHandler::register);
         Spark.post("/session", userHandler::login);
         Spark.delete("/session", userHandler::logout);
-
+        Spark.delete("/db", (req, res) -> {
+            userHandler.clear();
+            gameHandler.clear();
+            res.status(200);
+            return new JsonObject();
+        });
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -30,4 +36,5 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
 }
