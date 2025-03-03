@@ -47,7 +47,7 @@ public class GameHandler {
         try{
             Collection<GameData> games = gameService.listGames(authToken);
             res.status(200);
-            return gson.toJson(games);
+            return gson.toJson(Map.of("games", games));
         }
         catch(DataAccessException e){
             res.status(401);
@@ -55,6 +55,8 @@ public class GameHandler {
         }
 
     }
+
+
 
     public void clear() throws DataAccessException {
         gameService.clear();

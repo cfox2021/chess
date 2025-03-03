@@ -56,10 +56,7 @@ public class MemoryGameDAO implements GameDAO {
         db.getGameData().put(String.valueOf(gameData.gameID()), gameData);
     }
 
-    public Collection<GameData> getAllGames() throws DataAccessException {
-        if(db.getGameData().isEmpty()){
-            throw new DataAccessException("No Games Available");
-        }
+    public Collection<GameData> getAllGames()  {
         return db.getGameData().values();
     }
 
