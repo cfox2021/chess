@@ -13,6 +13,7 @@ public class GameServiceTest {
 
     private GameService gameService;
     private DataBase db = DataBase.getInstance();
+
     @BeforeEach
     public void setUp() {
         gameService = new GameService();
@@ -77,16 +78,17 @@ public class GameServiceTest {
         db.getAuthData().put("123", new AuthData("chaddicus", "123"));
         db.getAuthData().put("456", new AuthData("squibler145", "456"));
         db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
-        JoinGameRequest request1 = new JoinGameRequest("white", 1);
-        JoinGameRequest request2 = new JoinGameRequest("black", 1);
+        db.getGameNames().add("theChessGame");
+        JoinGameRequest request1 = new JoinGameRequest("WHITE", 1);
+        JoinGameRequest request2 = new JoinGameRequest("BLACK", 1);
         gameService.joinGame("123", request1);
         gameService.joinGame("456", request2);
         Assertions.assertEquals(expected, db.getGameData().get("1"));
     }
 
     @Test
-    public void testClear(){
-        db.getAuthData().put("123",new AuthData("steve", "123"));
+    public void testClear() {
+        db.getAuthData().put("123", new AuthData("steve", "123"));
         db.getAuthUsers().add("steve");
         db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
         db.getGameNames().add("theChessGame");
@@ -95,7 +97,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testClearAlreadyEmpty(){
+    public void testClearAlreadyEmpty() {
         gameService.clear();
         Assertions.assertTrue(db.getAuthData().isEmpty() && db.getAuthUsers().isEmpty() && db.getGameData().isEmpty() && db.getGameNames().isEmpty());
     }

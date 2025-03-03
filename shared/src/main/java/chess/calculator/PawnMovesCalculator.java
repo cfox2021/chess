@@ -9,7 +9,7 @@ import java.util.List;
 public class PawnMovesCalculator implements PieceMovesCalculator {
 
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color){
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
         List<ChessMove> validMoves = new ArrayList<>();
         int rowBeforePromotion;
         int direction;
@@ -20,77 +20,64 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
         boolean hasMoved;
 
         // Sets variables based on Color
-        if (color == ChessGame.TeamColor.WHITE){
+        if (color == ChessGame.TeamColor.WHITE) {
             rowBeforePromotion = 7;
             direction = 1;
             hasMoved = myPosition.getRow() != 2;
-        }
-        else{
+        } else {
             rowBeforePromotion = 2;
             direction = -1;
             hasMoved = myPosition.getRow() != 7;
         }
 
-        oneStepForward = new ChessPosition(myPosition.getRow() + direction,myPosition.getColumn());
-        twoStepsForward = new ChessPosition(myPosition.getRow() + (direction * 2),myPosition.getColumn());
-        diagonalRightStep = new ChessPosition(myPosition.getRow() + direction ,myPosition.getColumn() + 1);
-        diagonalLeftStep = new ChessPosition(myPosition.getRow() + direction,myPosition.getColumn() - 1);
+        oneStepForward = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
+        twoStepsForward = new ChessPosition(myPosition.getRow() + (direction * 2), myPosition.getColumn());
+        diagonalRightStep = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() + 1);
+        diagonalLeftStep = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() - 1);
 
 
         //Calculates if pawn can move 1 and 2 steps forward
-        if (isValidSpace(oneStepForward) && spaceEmpty(board, oneStepForward)){
-            if (myPosition.getRow() == rowBeforePromotion){
-                validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.ROOK));
-                validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.KNIGHT));
-                validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.BISHOP));
-                validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.QUEEN));
-            }
-            else{
-                validMoves.add(new ChessMove(myPosition, oneStepForward, null));
-            }
-            if (!hasMoved){
-                if(isValidSpace(twoStepsForward) && spaceEmpty(board, twoStepsForward)){
+        if (isValidSpace(oneStepForward) && spaceEmpty(board, oneStepForward)) {
+            checkPawnCanPromote(myPosition, validMoves, rowBeforePromotion, oneStepForward);
+            if (!hasMoved) {
+                if (isValidSpace(twoStepsForward) && spaceEmpty(board, twoStepsForward)) {
                     validMoves.add(new ChessMove(myPosition, twoStepsForward, null));
                 }
             }
         }
 
         //Calculates if Pawn can capture in column to the right
-        if(isValidSpace(diagonalRightStep) && spaceOccupiedByOpponent(board, diagonalRightStep, color)) {
-            if (myPosition.getRow() == rowBeforePromotion){
-                validMoves.add(new ChessMove(myPosition, diagonalRightStep, ChessPiece.PieceType.ROOK));
-                validMoves.add(new ChessMove(myPosition, diagonalRightStep, ChessPiece.PieceType.KNIGHT));
-                validMoves.add(new ChessMove(myPosition, diagonalRightStep, ChessPiece.PieceType.BISHOP));
-                validMoves.add(new ChessMove(myPosition, diagonalRightStep, ChessPiece.PieceType.QUEEN));
-            }
-            else {
-                validMoves.add(new ChessMove(myPosition, diagonalRightStep, null));
-            }
-        }
-
+        checkPawnCanCapture(board, myPosition, color, validMoves, rowBeforePromotion, diagonalRightStep);
 
 
         //Calculates if Pawn can capture in column to the left
-        if(isValidSpace(diagonalLeftStep) && spaceOccupiedByOpponent(board, diagonalLeftStep, color)) {
-            if (myPosition.getRow() == rowBeforePromotion){
-                validMoves.add(new ChessMove(myPosition, diagonalLeftStep, ChessPiece.PieceType.ROOK));
-                validMoves.add(new ChessMove(myPosition, diagonalLeftStep, ChessPiece.PieceType.KNIGHT));
-                validMoves.add(new ChessMove(myPosition, diagonalLeftStep, ChessPiece.PieceType.BISHOP));
-                validMoves.add(new ChessMove(myPosition, diagonalLeftStep, ChessPiece.PieceType.QUEEN));
-            }
-            else {
-                validMoves.add(new ChessMove(myPosition, diagonalLeftStep, null));
-            }
-        }
+        checkPawnCanCapture(board, myPosition, color, validMoves, rowBeforePromotion, diagonalLeftStep);
 
 
         System.out.println(validMoves);
         return validMoves;
     }
 
+    private void checkPawnCanPromote(ChessPosition myPosition, List<ChessMove> validMoves, int rowBeforePromotion, ChessPosition oneStepForward) {
+        if (myPosition.getRow() == rowBeforePromotion) {
+            validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.ROOK));
+            validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.KNIGHT));
+            validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.BISHOP));
+            validMoves.add(new ChessMove(myPosition, oneStepForward, ChessPiece.PieceType.QUEEN));
+        } else {
+            validMoves.add(new ChessMove(myPosition, oneStepForward, null));
+        }
+    }
+
+    private void checkPawnCanCapture(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color, List<ChessMove> validMoves, int rowBeforePromotion, ChessPosition diagonalRightStep) {
+        if (isValidSpace(diagonalRightStep) && spaceOccupiedByOpponent(board, diagonalRightStep, color)) {
+            checkPawnCanPromote(myPosition, validMoves, rowBeforePromotion, diagonalRightStep);
+        }
+    }
+
     @Override
     public boolean isValidSpace(ChessPosition position) {
-        if(position.getRow()  < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8){
+        if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
             return false;
         }
         return true;
@@ -98,7 +85,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public boolean spaceEmpty(ChessBoard board, ChessPosition position) {
-        if (board.getPiece(position) == null){
+        if (board.getPiece(position) == null) {
             return true;
         }
         return false;
@@ -106,7 +93,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
-        if (board.getPiece(position) instanceof ChessPiece){
+        if (board.getPiece(position) instanceof ChessPiece) {
             if (board.getPiece(position).getTeamColor() != myColor) {
                 return true;
             }

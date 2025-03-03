@@ -8,8 +8,11 @@ import chess.ChessPosition;
 import java.util.Collection;
 
 public interface PieceMovesCalculator {
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color);
-    public boolean isValidSpace(ChessPosition position);
-    public boolean spaceEmpty(ChessBoard board, ChessPosition position);
-    public boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor);
+    Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color);
+
+    boolean isValidSpace(ChessPosition position);
+
+    boolean spaceEmpty(ChessBoard board, ChessPosition position);
+
+    boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor);
 }

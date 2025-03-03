@@ -1,24 +1,20 @@
 package dataaccess;
-import model.UserData;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Collection;
+import model.UserData;
 
 
 public class MemoryUserDAO implements UserDAO {
 
-    private DataBase db = DataBase.getInstance();
+    private final DataBase db = DataBase.getInstance();
 
     public MemoryUserDAO() {
     }
 
     @Override
     public UserData getUserData(String username) throws DataAccessException {
-        if(db.getUserData().containsKey(username)){
+        if (db.getUserData().containsKey(username)) {
             return db.getUserData().get(username);
-        }
-        else{
+        } else {
             throw new DataAccessException("User \"" + username + "\" not found");
         }
     }
@@ -28,8 +24,7 @@ public class MemoryUserDAO implements UserDAO {
 
         if (!db.getUserData().containsKey(userData.username())) {
             db.getUserData().put(userData.username(), userData);
-        }
-        else{
+        } else {
             throw new DataAccessException("User \"" + userData.username() + "\" already exists");
         }
     }

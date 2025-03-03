@@ -27,7 +27,7 @@ public class UserServiceTest {
     @Test
     public void testRegisterUser() throws DataAccessException {
         expected = new LoginResult("tractor13", "");
-        LoginResult actual  = userService.register(new RegisterRequest("tractor13", "password", "email123@gooseville.net"));
+        LoginResult actual = userService.register(new RegisterRequest("tractor13", "password", "email123@gooseville.net"));
         Assertions.assertEquals(expected.username(), actual.username());
     }
 
@@ -35,7 +35,7 @@ public class UserServiceTest {
     public void testRegisterUserAlreadyExists() throws DataAccessException {
         userService.register(new RegisterRequest("tractor13", "password", "email123@gooseville.net"));
 
-        Assertions.assertThrows(DataAccessException.class, ()->{
+        Assertions.assertThrows(DataAccessException.class, () -> {
             userService.register(new RegisterRequest("tractor13", "password", "email123@gooseville.net"));
         });
     }
@@ -51,7 +51,7 @@ public class UserServiceTest {
     @Test
     public void testLoginUserIncorrectPassword() throws DataAccessException {
         userService.userDAO.addUserData(new UserData("Sprocket441", "cantGuessThis", "testingathing@sot.org"));
-        Assertions.assertThrows(DataAccessException.class, ()->{
+        Assertions.assertThrows(DataAccessException.class, () -> {
             userService.login(new LoginRequest("Sprocket441", "isThisThePassword?"));
         });
     }
@@ -71,31 +71,30 @@ public class UserServiceTest {
         LoginResult loginResult = userService.register(registerRequest);
         userService.authDAO.getAuthData(loginResult.authToken());
         userService.logout(new LogoutRequest(loginResult.authToken()));
-        Assertions.assertThrows(DataAccessException.class, ()->{
+        Assertions.assertThrows(DataAccessException.class, () -> {
             userService.logout(new LogoutRequest(loginResult.authToken()));
         });
     }
 
     @Test
     public void testLogoutUserNotLoggedIn() throws DataAccessException {
-        Assertions.assertThrows(DataAccessException.class, ()->{
+        Assertions.assertThrows(DataAccessException.class, () -> {
             userService.logout(new LogoutRequest("mr.Sneaky"));
         });
     }
 
     @Test
-    public void testClear(){
-        db.getUserData().put("steve",new UserData("steve", "steve", "steve@steve.steve"));
+    public void testClear() {
+        db.getUserData().put("steve", new UserData("steve", "steve", "steve@steve.steve"));
         userService.clear();
         Assertions.assertTrue(db.getUserData().isEmpty());
     }
 
     @Test
-    public void testClearAlreadyEmpty(){
+    public void testClearAlreadyEmpty() {
         userService.clear();
         Assertions.assertTrue(db.getUserData().isEmpty());
     }
-
 
 
 }

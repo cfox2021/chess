@@ -5,8 +5,8 @@ import spark.*;
 
 public class Server {
 
-    private UserHandler userHandler = new UserHandler();
-    private GameHandler gameHandler = new GameHandler();
+    private final UserHandler userHandler = new UserHandler();
+    private final GameHandler gameHandler = new GameHandler();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);

@@ -3,7 +3,6 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
-import model.AuthData;
 import model.GameData;
 
 import java.util.Collection;
@@ -13,7 +12,8 @@ public class GameService {
     MemoryGameDAO gameDAO = new MemoryGameDAO();
     MemoryAuthDAO authDAO = new MemoryAuthDAO();
 
-    public GameService() {}
+    public GameService() {
+    }
 
     public int createGame(String authToken, CreateGameRequest createRequest) throws DataAccessException {
         authenticateUser(authToken);
@@ -34,7 +34,7 @@ public class GameService {
         authDAO.getAuthData(authToken);
     }
 
-    public void clear(){
+    public void clear() {
         gameDAO.removeAllGameData();
         authDAO.removeAllAuthData();
     }
