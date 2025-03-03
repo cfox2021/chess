@@ -41,7 +41,8 @@ public class GameServiceTest {
     @Test
     public void testCreateGame() throws DataAccessException {
         db.getAuthData().put("123", new AuthData("chaddicus", "123"));
-        int gameID = gameService.createGame("123", "theChessGame");
+        CreateGameRequest request = new CreateGameRequest("theChessGame");
+        int gameID = gameService.createGame("123", request);
         Assertions.assertTrue(db.getGameData().containsKey(String.valueOf(gameID)));
     }
 
@@ -50,8 +51,9 @@ public class GameServiceTest {
         db.getAuthData().put("123", new AuthData("chaddicus", "123"));
         db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
         db.getGameNames().add("theChessGame");
+        CreateGameRequest request = new CreateGameRequest("theChessGame");
         Assertions.assertThrows(DataAccessException.class, () -> {
-            gameService.createGame("123","theChessGame");
+            gameService.createGame("123", request);
         });
     }
 
@@ -72,13 +74,15 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testJoinGameWhite() throws DataAccessException {
+    public void testJoinGame() throws DataAccessException {
         GameData expected = new GameData(1, "chaddicus", "squibler145", "theChessGame", new ChessGame());
         db.getAuthData().put("123", new AuthData("chaddicus", "123"));
         db.getAuthData().put("456", new AuthData("squibler145", "456"));
         db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
-        gameService.joinGame("123", "white", 1, "chaddicus");
-        gameService.joinGame("456", "black", 1, "squibler145");
+        JoinGameRequest request1 = new JoinGameRequest("white", 1, "chaddicus");
+        JoinGameRequest request2 = new JoinGameRequest("black", 1, "squibler145");
+        gameService.joinGame("123", request1);
+        gameService.joinGame("456", request2);
         Assertions.assertEquals(expected, db.getGameData().get("1"));
     }
 

@@ -15,9 +15,9 @@ public class GameService {
 
     public GameService() {}
 
-    public int createGame(String authToken, String gameName) throws DataAccessException {
+    public int createGame(String authToken, CreateGameRequest createRequest) throws DataAccessException {
         authenticateUser(authToken);
-        return gameDAO.createGame(gameName);
+        return gameDAO.createGame(createRequest.gameName());
     }
 
     public Collection<GameData> listGames(String authToken) throws DataAccessException {
@@ -25,9 +25,9 @@ public class GameService {
         return gameDAO.getAllGames();
     }
 
-    public void joinGame(String authToken, String color, int gameID, String playerName) throws DataAccessException {
+    public void joinGame(String authToken, JoinGameRequest joinRequest) throws DataAccessException {
         authenticateUser(authToken);
-        gameDAO.addPlayer(color, gameID, playerName);
+        gameDAO.addPlayer(joinRequest.color(), joinRequest.gameID(), joinRequest.playerName());
     }
 
     public void authenticateUser(String authToken) throws DataAccessException {

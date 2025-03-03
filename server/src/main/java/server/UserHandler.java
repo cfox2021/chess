@@ -7,6 +7,7 @@ import service.*;
 import com.google.gson.Gson;
 import spark.*;
 
+import javax.xml.crypto.Data;
 import java.util.Map;
 
 public class UserHandler {
@@ -19,12 +20,18 @@ public class UserHandler {
 
     public Object login(Request req, Response res) throws DataAccessException {
         Gson gson = new Gson();
-        System.out.println("Received JSON: " + req.body());
         LoginRequest loginRequest = gson.fromJson(req.body(), LoginRequest.class);
-        System.out.println("loginRequest: " + loginRequest);
-        LoginResult loginResult = userService.login(loginRequest);
-        res.status(200);
-        return gson.toJson(loginResult);
+        try{
+            LoginResult loginResult = userService.login(loginRequest);
+            res.status(200);
+            return gson.toJson(loginResult);
+        }
+        catch(DataAccessException e){
+            res.status(401);
+            return gson.toJson(Map.of("message", "Error: unauthorized"));
+        }
+
+
     }
 
     public Object register(Request req, Response res) throws DataAccessException {
@@ -47,11 +54,18 @@ public class UserHandler {
     }
 
     public Object logout(Request req, Response res) throws DataAccessException {
+        Gson gson = new Gson();
         String authToken = req.headers("authorization");
         LogoutRequest logoutRequest = new LogoutRequest(authToken);
-        userService.logout(logoutRequest);
-        res.status(200);
-        return new JsonObject();
+        try{
+            userService.logout(logoutRequest);
+            res.status(200);
+            return new JsonObject();
+        }
+        catch(DataAccessException e){
+            res.status(401);
+            return gson.toJson(Map.of("message", "Error: unauthorized"));
+        }
     }
 
     public void clear() throws DataAccessException {
