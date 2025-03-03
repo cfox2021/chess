@@ -8,7 +8,7 @@ import java.util.*;
 
 public class DataBase {
 
-    private final static DataBase instance = new DataBase();
+    private final static DataBase INSTANCE = new DataBase();
 
     public static Map<String, UserData> userData = new HashMap<>();
     public static Map<String, GameData> gameData = new HashMap<>();
@@ -21,7 +21,7 @@ public class DataBase {
     }
 
     public static DataBase getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public Map<String, UserData> getUserData() {
