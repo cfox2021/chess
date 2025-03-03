@@ -23,13 +23,13 @@ public class ChessPiece {
         this.teamColor = pieceColor;
         this.pieceType = type;
     }
+
     public ChessPiece(ChessPiece pieceToCopy) {
         this.teamColor = pieceToCopy.teamColor;
         this.pieceType = pieceToCopy.pieceType;
-        if(pieceToCopy.position != null) {
+        if (pieceToCopy.position != null) {
             this.position = new ChessPosition(pieceToCopy.getPosition().getRow(), pieceToCopy.getPosition().getColumn());
-        }
-        else{
+        } else {
             this.position = null;
         }
     }
@@ -75,12 +75,12 @@ public class ChessPiece {
         return pieceType;
     }
 
-    public void setPieceType(PieceType type){
+    public void setPieceType(PieceType type) {
         pieceType = type;
     }
 
 
-    public ChessPosition getPosition(){
+    public ChessPosition getPosition() {
         return position;
     }
 

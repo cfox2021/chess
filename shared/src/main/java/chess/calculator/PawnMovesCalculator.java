@@ -93,7 +93,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator {
 
     @Override
     public boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
-        if (board.getPiece(position) instanceof ChessPiece) {
+        if (board.getPiece(position) != null) {
             if (board.getPiece(position).getTeamColor() != myColor) {
                 return true;
             }
