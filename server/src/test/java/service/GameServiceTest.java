@@ -68,9 +68,7 @@ public class GameServiceTest {
     @Test
     public void testListGamesNoGames() throws DataAccessException {
         db.getAuthData().put("123", new AuthData("chaddicus", "123"));
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            gameService.listGames("123");
-        });
+        Assertions.assertEquals(db.getGameData().values(), gameService.listGames("123"));
     }
 
     @Test
@@ -79,8 +77,8 @@ public class GameServiceTest {
         db.getAuthData().put("123", new AuthData("chaddicus", "123"));
         db.getAuthData().put("456", new AuthData("squibler145", "456"));
         db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
-        JoinGameRequest request1 = new JoinGameRequest("white", 1, "chaddicus");
-        JoinGameRequest request2 = new JoinGameRequest("black", 1, "squibler145");
+        JoinGameRequest request1 = new JoinGameRequest("white", 1);
+        JoinGameRequest request2 = new JoinGameRequest("black", 1);
         gameService.joinGame("123", request1);
         gameService.joinGame("456", request2);
         Assertions.assertEquals(expected, db.getGameData().get("1"));

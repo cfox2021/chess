@@ -56,7 +56,32 @@ public class GameHandler {
 
     }
 
+    public Object joinGame(Request req, Response res) throws DataAccessException {
+        Gson gson = new Gson();
+        String authToken = req.headers("authorization");
+        JoinGameRequest request = gson.fromJson(req.body(), JoinGameRequest.class);
+        System.out.println("Json: " + req.body());
+        if(authToken == null || request.playerColor() == null || !(request.playerColor().equals("WHITE") || request.playerColor().equals("BLACK"))  || request.gameID() < 0) {
+            res.status(400);
+            return gson.toJson(Map.of("message", "Error: bad request"));
+        }
+        try{
+            if(gameService.joinGame(authToken, request)){
+                res.status(200);
+                return new JsonObject();
+            }
+            else{
+                res.status(403);
+                return gson.toJson(Map.of("message", "Error: already taken"));
+            }
+        }
+        catch(DataAccessException e){
+            res.status(401);
+            return gson.toJson(Map.of("message", "Error: unauthorized"));
+        }
 
+
+    }
 
     public void clear() throws DataAccessException {
         gameService.clear();

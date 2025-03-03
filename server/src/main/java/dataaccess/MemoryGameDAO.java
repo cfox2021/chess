@@ -37,19 +37,22 @@ public class MemoryGameDAO implements GameDAO {
         }
     }
 
-    public void addPlayer(String color, int gameID, String username) throws DataAccessException {
+    public boolean addPlayer(String color, int gameID, String authToken) {
         GameData oldGameData = db.getGameData().get(String.valueOf(gameID));
         GameData newGameData;
-        if(color.equals("white") && oldGameData.whiteUsername() == null){
+        System.out.println("oldGameData: " + oldGameData + "\n");
+        String username = db.getAuthData().get(authToken).username();
+        if(color != null && color.equals("WHITE") && oldGameData.whiteUsername() == null){
             newGameData = new GameData(oldGameData.gameID(), username, oldGameData.blackUsername(), oldGameData.gameName(), oldGameData.game());
         }
-        else if(color.equals("black") && oldGameData.blackUsername() == null){
+        else if(color != null && color.equals("BLACK") && oldGameData.blackUsername() == null){
             newGameData = new GameData(oldGameData.gameID(), oldGameData.whiteUsername(), username, oldGameData.gameName(), oldGameData.game());
         }
         else{
-            throw new DataAccessException(color + " player is already taken");
+            return false;
         }
         updateGameData(newGameData);
+        return true;
     }
 
     public void updateGameData(GameData gameData) {

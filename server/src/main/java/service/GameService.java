@@ -25,9 +25,9 @@ public class GameService {
         return gameDAO.getAllGames();
     }
 
-    public void joinGame(String authToken, JoinGameRequest joinRequest) throws DataAccessException {
+    public boolean joinGame(String authToken, JoinGameRequest joinRequest) throws DataAccessException {
         authenticateUser(authToken);
-        gameDAO.addPlayer(joinRequest.color(), joinRequest.gameID(), joinRequest.playerName());
+        return gameDAO.addPlayer(joinRequest.playerColor(), joinRequest.gameID(), authToken);
     }
 
     public void authenticateUser(String authToken) throws DataAccessException {
