@@ -1,18 +1,32 @@
 package chess.calculator;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 
 import java.util.Collection;
 
 public interface PieceMovesCalculator {
     Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color);
 
-    boolean isValidSpace(ChessPosition position);
+    default boolean isValidSpace(ChessPosition position){
+        if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
+            return false;
+        }
+        return true;
+    };
 
-    boolean spaceEmpty(ChessBoard board, ChessPosition position);
+    default boolean spaceEmpty(ChessBoard board, ChessPosition position){
+        if (board.getPiece(position) == null) {
+            return true;
+        }
+        return false;
+    };
 
-    boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor);
+    default boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor){
+        if (board.getPiece(position) instanceof ChessPiece) {
+            if (board.getPiece(position).getTeamColor() != myColor) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

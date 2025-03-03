@@ -66,30 +66,4 @@ public class RookMovesCalculator implements PieceMovesCalculator {
         return false;
     }
 
-
-    @Override
-    public boolean isValidSpace(ChessPosition position) {
-        if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean spaceEmpty(ChessBoard board, ChessPosition position) {
-        if (board.getPiece(position) == null) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean spaceOccupiedByOpponent(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
-        if (board.getPiece(position) instanceof ChessPiece) {
-            if (board.getPiece(position).getTeamColor() != myColor) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
