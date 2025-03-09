@@ -23,7 +23,7 @@ public class MySqlUserDAO implements UserDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Could Not Configure Database: from USER DAO");
+            throw new DataAccessException("Could Not Configure userData");
         }
     }
 
@@ -31,11 +31,27 @@ public class MySqlUserDAO implements UserDAO {
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  userData (
-              `authToken` varchar(256) NOT NULL,
-              `username` varchar(256) NOT NULL
+              `username` varchar(256) NOT NULL,
+              `password` varchar(256) NOT NULL,
+              `email` varchar(256) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
+
+
+    private void executeUpdate(String statement, Object... params) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                for (var i = 0; i < params.length; i++) {
+                    var param = params[i];
+                    if (param instanceof String p) ps.setString(i + 1, p);
+                }
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Could Not Update userData");
+        }
+    }
 
     @Override
     public UserData getUserData(String username) throws DataAccessException {
@@ -44,7 +60,8 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public void addUserData(UserData userData) throws DataAccessException {
-
+        var statement = "INSERT INTO userData (username, password, email) VALUES (?, ?, ?)";
+        executeUpdate(statement, userData.username(), userData.password(), userData.email());
     }
 
     @Override
