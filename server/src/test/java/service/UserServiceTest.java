@@ -15,7 +15,7 @@ public class UserServiceTest {
     private DataBase db = DataBase.getInstance();
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws DataAccessException {
         userService = new UserService();
 
         db.getUserData().clear();
@@ -84,14 +84,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testClear() {
+    public void testClear() throws DataAccessException {
         db.getUserData().put("steve", new UserData("steve", "steve", "steve@steve.steve"));
         userService.clear();
         Assertions.assertTrue(db.getUserData().isEmpty());
     }
 
     @Test
-    public void testClearAlreadyEmpty() {
+    public void testClearAlreadyEmpty() throws DataAccessException {
         userService.clear();
         Assertions.assertTrue(db.getUserData().isEmpty());
     }

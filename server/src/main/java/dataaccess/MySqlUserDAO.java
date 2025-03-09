@@ -55,7 +55,27 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public UserData getUserData(String username) throws DataAccessException {
-        return null;
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username, password, email FROM userData WHERE username=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                try (var rs = ps.executeQuery()) {
+                    ps.setString(1, username);
+                    if (rs.next()) {
+                        return readUser(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Could not retrieve userData");
+        }
+        throw new DataAccessException("Could not retrieve userData");
+    }
+
+    private UserData readUser(ResultSet rs) throws SQLException {
+        var username = rs.getString("username");
+        var password = rs.getString("password");
+        var email = rs.getString("email");
+        return new UserData(username, password, email);
     }
 
     @Override
@@ -65,7 +85,15 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     @Override
-    public void removeAllUserData() {
-
+    public void removeAllUserData() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "DROP userData FROM chess";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.executeUpdate();
+            }
+            configureDatabase();
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Could Not Delete userData");
+        }
     }
 }

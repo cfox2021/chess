@@ -1,16 +1,14 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.*;
 import model.GameData;
 
 import java.util.Collection;
 
 public class GameService {
 
-    MemoryGameDAO gameDAO = new MemoryGameDAO();
-    MemoryAuthDAO authDAO = new MemoryAuthDAO();
+    MySqlGameDAO gameDAO = new MySqlGameDAO();
+    MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
     public GameService() {
     }

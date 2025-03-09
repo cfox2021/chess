@@ -1,8 +1,6 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 
@@ -10,12 +8,12 @@ import java.util.UUID;
 
 public class UserService {
 
-    MemoryUserDAO userDAO;
-    MemoryAuthDAO authDAO;
+    MySqlUserDAO userDAO;
+    MySqlAuthDAO authDAO;
 
-    public UserService() {
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
+    public UserService() throws DataAccessException {
+        userDAO = new MySqlUserDAO();
+        authDAO = new MySqlAuthDAO();
     }
 
 
@@ -53,7 +51,7 @@ public class UserService {
         authDAO.removeAuthData(logoutRequest.authToken());
     }
 
-    public void clear() {
+    public void clear() throws DataAccessException {
         userDAO.removeAllUserData();
     }
 }

@@ -7,5 +7,5 @@ public interface UserDAO {
 
     void addUserData(UserData userData) throws DataAccessException;
 
-    void removeAllUserData();
+    void removeAllUserData() throws DataAccessException;
 }
