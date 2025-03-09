@@ -1,12 +1,16 @@
 package server;
 
 import com.google.gson.JsonObject;
+import dataaccess.DataAccessException;
 import spark.*;
 
 public class Server {
 
     private final UserHandler userHandler = new UserHandler();
     private final GameHandler gameHandler = new GameHandler();
+
+    public Server() throws DataAccessException {
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
