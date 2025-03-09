@@ -2,7 +2,7 @@ package dataaccess;
 
 import model.AuthData;
 
-public class SQLAuthDAO implements AuthDAO {
+public class MySqlAuthDAO implements AuthDAO {
     @Override
     public AuthData getAuthData(String userName) throws DataAccessException {
         return null;

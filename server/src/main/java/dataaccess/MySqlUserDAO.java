@@ -2,7 +2,7 @@ package dataaccess;
 
 import model.UserData;
 
-public class SQLUserDAO implements UserDAO {
+public class MySqlUserDAO implements UserDAO {
     @Override
     public UserData getUserData(String username) throws DataAccessException {
         return null;
