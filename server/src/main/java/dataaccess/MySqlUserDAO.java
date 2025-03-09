@@ -34,6 +34,7 @@ public class MySqlUserDAO implements UserDAO {
               `username` varchar(256) NOT NULL,
               `password` varchar(256) NOT NULL,
               `email` varchar(256) NOT NULL
+              PRIMARY KEY (`username`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
@@ -44,6 +45,9 @@ public class MySqlUserDAO implements UserDAO {
             try (var ps = conn.prepareStatement(statement)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
+                    if (param == null) {
+                        throw new DataAccessException("Provided userData missing parameter: " + statement);
+                    }
                     if (param instanceof String p) ps.setString(i + 1, p);
                 }
                 ps.executeUpdate();
@@ -58,8 +62,8 @@ public class MySqlUserDAO implements UserDAO {
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "SELECT username, password, email FROM userData WHERE username=?";
             try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
                 try (var rs = ps.executeQuery()) {
-                    ps.setString(1, username);
                     if (rs.next()) {
                         return readUser(rs);
                     }
@@ -87,11 +91,10 @@ public class MySqlUserDAO implements UserDAO {
     @Override
     public void removeAllUserData() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "DROP userData FROM chess";
+            var statement = "DELETE FROM userData";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.executeUpdate();
             }
-            configureDatabase();
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException("Could Not Delete userData");
         }
