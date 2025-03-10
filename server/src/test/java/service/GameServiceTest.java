@@ -15,7 +15,7 @@ public class GameServiceTest {
     private DataBase db = DataBase.getInstance();
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws DataAccessException {
         gameService = new GameService();
         db.getUserData().clear();
         db.getAuthData().clear();
@@ -87,7 +87,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testClear() {
+    public void testClear() throws DataAccessException {
         db.getAuthData().put("123", new AuthData("steve", "123"));
         db.getAuthUsers().add("steve");
         db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
@@ -97,7 +97,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testClearAlreadyEmpty() {
+    public void testClearAlreadyEmpty() throws DataAccessException {
         gameService.clear();
         Assertions.assertTrue(db.getAuthData().isEmpty() && db.getAuthUsers().isEmpty() && db.getGameData().isEmpty() && db.getGameNames().isEmpty());
     }

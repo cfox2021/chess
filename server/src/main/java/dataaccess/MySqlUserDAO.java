@@ -10,10 +10,10 @@ import java.sql.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class MySqlUserDAO implements UserDAO {
+public class MySqlUserDAO implements UserDAO, DAOSupport{
 
     public MySqlUserDAO() throws DataAccessException {
-        configureDatabase();
+        configureDatabase(createStatements);
     }
 
     @Override
@@ -59,20 +59,6 @@ public class MySqlUserDAO implements UserDAO {
         return new UserData(username, password, email);
     }
 
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DataAccessException("Could Not Configure userData");
-        }
-    }
-
-
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  userData (
@@ -85,22 +71,4 @@ public class MySqlUserDAO implements UserDAO {
     };
 
 
-    private void executeUpdate(String statement, Object... params) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param == null) {
-                        throw new DataAccessException("Provided userData missing parameter: " + statement);
-                    }
-                    if (param instanceof String p) {
-                        ps.setString(i + 1, p);
-                    }
-                }
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException("Could Not Update userData");
-        }
-    }
 }

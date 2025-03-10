@@ -10,7 +10,7 @@ public class GameService {
     MySqlGameDAO gameDAO = new MySqlGameDAO();
     MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
-    public GameService() {
+    public GameService() throws DataAccessException {
     }
 
     public int createGame(String authToken, CreateGameRequest createRequest) throws DataAccessException {
@@ -32,7 +32,7 @@ public class GameService {
         authDAO.getAuthData(authToken);
     }
 
-    public void clear() {
+    public void clear() throws DataAccessException {
         gameDAO.removeAllGameData();
         authDAO.removeAllAuthData();
     }

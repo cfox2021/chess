@@ -15,7 +15,7 @@ public class GameHandler {
 
     GameService gameService;
 
-    public GameHandler() {
+    public GameHandler() throws DataAccessException {
         this.gameService = new GameService();
     }
 

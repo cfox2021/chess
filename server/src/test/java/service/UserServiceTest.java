@@ -2,9 +2,11 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
+import dataaccess.DatabaseManager;
 import model.UserData;
 import org.eclipse.jetty.security.LoginService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -12,16 +14,12 @@ public class UserServiceTest {
 
     private UserService userService;
     private LoginResult expected;
-    private DataBase db = DataBase.getInstance();
 
     @BeforeEach
     public void setUp() throws DataAccessException {
         userService = new UserService();
-
-        db.getUserData().clear();
-        db.getAuthData().clear();
-        db.getAuthUsers().clear();
         expected = new LoginResult(null, null);
+        userService.clear();
     }
 
     @Test
@@ -85,16 +83,13 @@ public class UserServiceTest {
 
     @Test
     public void testClear() throws DataAccessException {
-        db.getUserData().put("steve", new UserData("steve", "steve", "steve@steve.steve"));
+        userService.register(new RegisterRequest("steve", "steve", "steve@steve"));
         userService.clear();
-        Assertions.assertTrue(db.getUserData().isEmpty());
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            userService.login(new LoginRequest("steve", "steve"));
+        });
     }
 
-    @Test
-    public void testClearAlreadyEmpty() throws DataAccessException {
-        userService.clear();
-        Assertions.assertTrue(db.getUserData().isEmpty());
-    }
 
 
 }

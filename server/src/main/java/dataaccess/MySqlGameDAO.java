@@ -5,7 +5,7 @@ import model.GameData;
 import java.util.Collection;
 import java.util.List;
 
-public class MySqlGameDAO implements GameDAO {
+public class MySqlGameDAO implements GameDAO, DAOSupport {
     @Override
     public int createGame(String gameName) throws DataAccessException {
         return 0;
