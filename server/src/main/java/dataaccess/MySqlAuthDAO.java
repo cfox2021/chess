@@ -26,9 +26,9 @@ public class MySqlAuthDAO implements AuthDAO, DAOSupport{
                 }
             }
         } catch (Exception e) {
-            throw new DataAccessException("Could not retrieve userData");
+            throw new DataAccessException("Could not retrieve authData");
         }
-        throw new DataAccessException("Could not retrieve userData");
+        throw new DataAccessException("Could not retrieve authData");
     }
 
     @Override
@@ -43,7 +43,10 @@ public class MySqlAuthDAO implements AuthDAO, DAOSupport{
             var statement = "DELETE FROM authData WHERE authToken=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, token);
-                ps.executeUpdate();
+                int rowsRemoved = ps.executeUpdate();
+                if (rowsRemoved == 0) {
+                    throw new DataAccessException("Could not remove authData");
+                }
             }
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException("Could Not Delete authData");
@@ -67,7 +70,7 @@ public class MySqlAuthDAO implements AuthDAO, DAOSupport{
             CREATE TABLE IF NOT EXISTS  authData (
               `authToken` varchar(256) NOT NULL,
               `username` varchar(256) NOT NULL,
-              PRIMARY KEY (`username`)
+              PRIMARY KEY (`authToken`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
