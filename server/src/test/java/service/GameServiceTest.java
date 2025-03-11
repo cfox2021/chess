@@ -3,6 +3,8 @@ package service;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
+import dataaccess.MySqlAuthDAO;
+import dataaccess.MySqlGameDAO;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;
@@ -12,21 +14,20 @@ import org.junit.jupiter.api.Test;
 public class GameServiceTest {
 
     private GameService gameService;
-    private DataBase db = DataBase.getInstance();
+    private MySqlAuthDAO authDAO;
+    private MySqlGameDAO gameDAO;
 
     @BeforeEach
     public void setUp() throws DataAccessException {
         gameService = new GameService();
-        db.getUserData().clear();
-        db.getAuthData().clear();
-        db.getAuthUsers().clear();
-        db.getGameData().clear();
-        db.getGameNames().clear();
+        authDAO = new MySqlAuthDAO();
+        gameDAO = new MySqlGameDAO();
+        gameService.clear();
     }
 
     @Test
     public void testAuthenticateUserHasAuthToken() throws DataAccessException {
-        db.getAuthData().put("123", new AuthData("chaddicus", "123"));
+        authDAO.addAuthData(new AuthData("SamwiseG", "123"));
         Assertions.assertDoesNotThrow(() -> {
             gameService.authenticateUser("123");
         });
@@ -41,18 +42,23 @@ public class GameServiceTest {
 
     @Test
     public void testCreateGame() throws DataAccessException {
-        db.getAuthData().put("123", new AuthData("chaddicus", "123"));
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        boolean gameFound = false;
         CreateGameRequest request = new CreateGameRequest("theChessGame");
         int gameID = gameService.createGame("123", request);
-        Assertions.assertTrue(db.getGameData().containsKey(String.valueOf(gameID)));
+        for (GameData game : gameService.listGames("123")){
+            if (game.gameID() == gameID){
+                gameFound = true;
+            }
+        }
+        Assertions.assertTrue(gameFound);
     }
 
     @Test
     public void testCreateGameAlreadyExists() throws DataAccessException {
-        db.getAuthData().put("123", new AuthData("chaddicus", "123"));
-        db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
-        db.getGameNames().add("theChessGame");
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
         CreateGameRequest request = new CreateGameRequest("theChessGame");
+        gameService.createGame("123", request);
         Assertions.assertThrows(DataAccessException.class, () -> {
             gameService.createGame("123", request);
         });
