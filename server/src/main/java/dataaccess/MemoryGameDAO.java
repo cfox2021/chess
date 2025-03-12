@@ -42,7 +42,7 @@ public class MemoryGameDAO implements GameDAO {
             } else {
                 return false;
             }
-            updateGameData(newGameData);
+            updateGameData(newGameData, color);
             return true;
         } else {
             return false;
@@ -50,8 +50,7 @@ public class MemoryGameDAO implements GameDAO {
 
     }
 
-    @Override
-    public void updateGameData(GameData gameData) {
+    public void updateGameData(GameData gameData, String color) {
         db.getGameData().put(String.valueOf(gameData.gameID()), gameData);
     }
 

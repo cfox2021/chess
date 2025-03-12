@@ -9,8 +9,6 @@ public interface GameDAO {
 
     boolean addPlayer(String color, int gameID, String authToken, String username) throws DataAccessException;
 
-    void updateGameData(GameData gameData) throws DataAccessException;
-
     Collection<GameData> getAllGames() throws DataAccessException;
 
     void removeAllGameData() throws DataAccessException;
