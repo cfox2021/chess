@@ -3,6 +3,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class UserService {
         LoginResult loginResult = null;
         UserData userData = userDAO.getUserData(loginRequest.username());
         if (userData != null) {
-            if (loginRequest.password().equals(userData.password())) {
+            if (BCrypt.checkpw(loginRequest.password(), userData.password())) {
                 String authToken = UUID.randomUUID().toString();
                 AuthData authData = new AuthData(loginRequest.username(), authToken);
                 authDAO.addAuthData(authData);

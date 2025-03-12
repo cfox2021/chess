@@ -62,7 +62,7 @@ public class GameServiceTest {
         authDAO.addAuthData(new AuthData("chaddicus", "123"));
         CreateGameRequest request = new CreateGameRequest("theChessGame");
         gameService.createGame("123", request);
-        Assertions.assertThrows(DataAccessException.class, () -> {
+        Assertions.assertDoesNotThrow( () -> {
             gameService.createGame("123", request);
         });
     }

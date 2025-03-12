@@ -37,7 +37,6 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
         } else {
             return false;
         }
-        System.out.println(newGame);
         updateGameData(newGame, color);
         return true;
     }
@@ -100,7 +99,6 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
         } catch (Exception e) {
             throw new DataAccessException("Could Not read Games");
         }
-        System.out.println("LIST:" + games);
         return games;
     }
 

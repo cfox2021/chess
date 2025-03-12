@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class MySqlUserDAOTest {
 
@@ -48,7 +49,9 @@ public class MySqlUserDAOTest {
     public void testGetUserData() throws DataAccessException {
         UserData expected = new UserData("username", "password", "email@email.com");
         userDAO.addUserData(expected);
-        Assertions.assertEquals(expected,userDAO.getUserData(expected.username()));
+        UserData actual = userDAO.getUserData(expected.username());
+        Assertions.assertTrue(actual.username().equals(expected.username()) && BCrypt.checkpw("password", actual.password())
+                                && actual.email().equals(expected.email()));
 
     }
 
