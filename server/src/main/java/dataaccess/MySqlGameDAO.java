@@ -37,6 +37,7 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
         } else {
             return false;
         }
+        System.out.println(newGame);
         updateGameData(newGame, color);
         return true;
     }
@@ -49,20 +50,39 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
 
     private void updateGameData(GameData newGame, String color) throws DataAccessException {
         var statement = "";
-        String username = "";
-
-        if (color != null && color.equals("WHITE")) {
-            username = newGame.whiteUsername();
-            statement = "INSERT INTO gameData (id, whiteUsername, gameName, game) VALUES (?, ?, ?, ?)";
-        }
-        else if (color != null && color.equals("BLACK")) {
-            username = newGame.blackUsername();
-            statement = "INSERT INTO gameData (id, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
-        }
+        String whiteUsername = "";
+        String blackUsername = "";
 
         ChessGame game = newGame.game();
         var gameJson = new Gson().toJson(game);
-        executeUpdate(statement, String.valueOf(newGame.gameID()), username, newGame.gameName(), gameJson);
+
+        if (color != null && color.equals("WHITE")) {
+            whiteUsername = newGame.whiteUsername();
+            if (newGame.blackUsername() != null) {
+                statement = "INSERT INTO gameData (id, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+                blackUsername = newGame.blackUsername();
+                executeUpdate(statement, String.valueOf(newGame.gameID()), whiteUsername, blackUsername,newGame.gameName(), gameJson);
+            }
+            else{
+                statement = "INSERT INTO gameData (id, whiteUsername, gameName, game) VALUES (?, ?, ?, ?)";
+                executeUpdate(statement, String.valueOf(newGame.gameID()), whiteUsername, newGame.gameName(), gameJson);
+
+            }
+
+        }
+        else if (color != null && color.equals("BLACK")) {
+            blackUsername = newGame.blackUsername();
+            if (newGame.whiteUsername() != null) {
+                statement = "INSERT INTO gameData (id, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+                whiteUsername = newGame.whiteUsername();
+                executeUpdate(statement, String.valueOf(newGame.gameID()), whiteUsername, blackUsername, newGame.gameName(), gameJson);
+            }
+            else{
+                statement = "INSERT INTO gameData (id, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+                executeUpdate(statement, String.valueOf(newGame.gameID()), blackUsername, newGame.gameName(), gameJson);
+            }
+        }
+
     }
 
     @Override
@@ -80,6 +100,7 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
         } catch (Exception e) {
             throw new DataAccessException("Could Not read Games");
         }
+        System.out.println("LIST:" + games);
         return games;
     }
 
@@ -117,7 +138,6 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
         var json = rs.getString("game");
         return new GameData (gameID,whiteUsername,blackUsername,gameName,(gson.fromJson(json, ChessGame.class)));
     }
-
     private GameData getGameData(int gameID) throws DataAccessException {
         GameData game = null;
         try (var conn = DatabaseManager.getConnection()) {

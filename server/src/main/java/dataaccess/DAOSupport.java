@@ -21,11 +21,9 @@ public interface DAOSupport {
     default int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             boolean isInsert = statement.trim().toUpperCase().startsWith("INSERT");
-            System.out.println(statement);
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    System.out.println(param);
                     if (param == null) {
                         throw new DataAccessException("Provided Data missing parameter: " + statement);
                     }
