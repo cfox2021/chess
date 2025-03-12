@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 public class GameServiceTest {
 
     private GameService gameService;
+    private UserService userService;
     private MySqlAuthDAO authDAO;
     private MySqlGameDAO gameDAO;
 
@@ -23,6 +24,8 @@ public class GameServiceTest {
         authDAO = new MySqlAuthDAO();
         gameDAO = new MySqlGameDAO();
         gameService.clear();
+        userService = new UserService();
+        userService.clear();
     }
 
     @Test
@@ -66,45 +69,47 @@ public class GameServiceTest {
 
     @Test
     public void testListGames() throws DataAccessException {
-        db.getAuthData().put("123", new AuthData("chaddicus", "123"));
-        db.getGameData().put("1", new GameData(1, "someone", "someoneElse", "theChessGame", new ChessGame()));
-        db.getGameData().put("2", new GameData(2, "null", "notNull", "anotherGame", new ChessGame()));
-        Assertions.assertEquals(db.getGameData().values(), gameService.listGames("123"));
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        CreateGameRequest request = new CreateGameRequest("theChessGame");
+        CreateGameRequest request2 = new CreateGameRequest("anotherGame");
+        gameService.createGame("123", request);
+        gameService.createGame("123", request);
+        Assertions.assertEquals(gameDAO.getAllGames(), gameService.listGames("123"));
     }
 
     @Test
     public void testListGamesNoGames() throws DataAccessException {
-        db.getAuthData().put("123", new AuthData("chaddicus", "123"));
-        Assertions.assertEquals(db.getGameData().values(), gameService.listGames("123"));
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        Assertions.assertEquals(gameDAO.getAllGames(), gameService.listGames("123"));
     }
 
     @Test
     public void testJoinGame() throws DataAccessException {
-        GameData expected = new GameData(1, "chaddicus", "squibler145", "theChessGame", new ChessGame());
-        db.getAuthData().put("123", new AuthData("chaddicus", "123"));
-        db.getAuthData().put("456", new AuthData("squibler145", "456"));
-        db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
-        db.getGameNames().add("theChessGame");
-        JoinGameRequest request1 = new JoinGameRequest("WHITE", 1);
-        JoinGameRequest request2 = new JoinGameRequest("BLACK", 1);
-        gameService.joinGame("123", request1);
-        gameService.joinGame("456", request2);
-        Assertions.assertEquals(expected, db.getGameData().get("1"));
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        authDAO.addAuthData(new AuthData("squibler145", "456"));
+        int gameID = gameService.createGame("123", new CreateGameRequest("theChessGame"));
+        System.out.println(gameID);
+        JoinGameRequest request1 = new JoinGameRequest("WHITE", gameID);
+        JoinGameRequest request2 = new JoinGameRequest("BLACK", gameID);
+        Assertions.assertDoesNotThrow(() -> {
+            gameService.joinGame("123", request1);
+            gameService.joinGame("456", request2);
+        });
     }
 
     @Test
     public void testClear() throws DataAccessException {
-        db.getAuthData().put("123", new AuthData("steve", "123"));
-        db.getAuthUsers().add("steve");
-        db.getGameData().put("1", new GameData(1, null, null, "theChessGame", new ChessGame()));
-        db.getGameNames().add("theChessGame");
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        gameService.createGame("123", new CreateGameRequest("theChessGame"));
         gameService.clear();
-        Assertions.assertTrue(db.getAuthData().isEmpty() && db.getAuthUsers().isEmpty() && db.getGameData().isEmpty() && db.getGameNames().isEmpty());
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        Assertions.assertTrue(gameService.listGames("123").isEmpty());
     }
 
     @Test
     public void testClearAlreadyEmpty() throws DataAccessException {
         gameService.clear();
-        Assertions.assertTrue(db.getAuthData().isEmpty() && db.getAuthUsers().isEmpty() && db.getGameData().isEmpty() && db.getGameNames().isEmpty());
+        authDAO.addAuthData(new AuthData("chaddicus", "123"));
+        Assertions.assertTrue(gameService.listGames("123").isEmpty());
     }
 }

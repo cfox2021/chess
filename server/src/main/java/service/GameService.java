@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.*;
+import model.AuthData;
 import model.GameData;
 
 import java.util.Collection;
@@ -24,12 +25,12 @@ public class GameService {
     }
 
     public boolean joinGame(String authToken, JoinGameRequest joinRequest) throws DataAccessException {
-        authenticateUser(authToken);
-        return gameDAO.addPlayer(joinRequest.playerColor(), joinRequest.gameID(), authToken);
+        String username = authenticateUser(authToken).username();
+        return gameDAO.addPlayer(joinRequest.playerColor(), joinRequest.gameID(), authToken, username);
     }
 
-    public void authenticateUser(String authToken) throws DataAccessException {
-        authDAO.getAuthData(authToken);
+    public AuthData authenticateUser(String authToken) throws DataAccessException {
+        return authDAO.getAuthData(authToken);
     }
 
     public void clear() throws DataAccessException {

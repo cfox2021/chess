@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface GameDAO {
     int createGame(String gameName) throws DataAccessException;
 
-    boolean addPlayer(String color, int gameID, String authToken) throws DataAccessException;
+    boolean addPlayer(String color, int gameID, String authToken, String username) throws DataAccessException;
 
     void updateGameData(GameData gameData) throws DataAccessException;
 

@@ -26,52 +26,43 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
     }
 
     @Override
-    public boolean addPlayer(String color, int gameID, String authToken) throws DataAccessException { //continue from here
-        GameData oldGame = null;
+    public boolean addPlayer(String color, int gameID, String authToken, String username) throws DataAccessException {
+        GameData oldGame = getGameData(gameID);
         GameData newGame;
-        String username = "";
-        try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, whiteUsername, blackUsername, gameName, game FROM gameData WHERE id=?";
-            try (var ps = conn.prepareStatement(statement)) {
-                ps.setString(1, String.valueOf(gameID));
-                try (var rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        oldGame = readGame(rs);
-                    }
-                    if (oldGame == null) {
-                        throw new DataAccessException("Game not found for ID: " + gameID);
-                    }
-                }
-            }
-
-            var statement2 = "SELECT username FROM authData WHERE authToken=?";
-            try (var ps2 = conn.prepareStatement(statement2)) {
-                ps2.setString(1, String.valueOf(authToken));
-                try (var rs2 = ps2.executeQuery()) {
-                    if (rs2.next()) {
-                        username = rs2.getString("username");
-                    }
-                    if (color != null && color.equals("WHITE") && oldGame.whiteUsername() == null) {
-                        newGame = new GameData(oldGame.gameID(), username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
-                    } else if (color != null && color.equals("BLACK") && oldGame.blackUsername() == null) {
-                        newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
-                    } else {
-                        return false;
-                    }
-                    updateGameData(newGame);
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            throw new DataAccessException("Could not retrieve gameData");
+        removeGameData(gameID);
+        if (color != null && color.equals("WHITE") && oldGame.whiteUsername() == null) {
+            newGame = new GameData(oldGame.gameID(), username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+        } else if (color != null && color.equals("BLACK") && oldGame.blackUsername() == null) {
+            newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
+        } else {
+            return false;
         }
+        updateGameData(newGame, color);
+        return true;
     }
 
     @Override
     public void updateGameData(GameData newGame) throws DataAccessException {
-        var statement = "UPDATE gameData SET whiteUsername = ?, blackUsername = ?, gameName = ?, game = ? WHERE gameID = ?";
-        var gameJson = new Gson().toJson(newGame.game());
-        executeUpdate(statement, newGame.whiteUsername(), newGame.blackUsername(), newGame.gameName(), gameJson, newGame.gameID());
+        throw new DataAccessException("You gotta give color dude");
+    }
+
+
+    private void updateGameData(GameData newGame, String color) throws DataAccessException {
+        var statement = "";
+        String username = "";
+
+        if (color != null && color.equals("WHITE")) {
+            username = newGame.whiteUsername();
+            statement = "INSERT INTO gameData (id, whiteUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        }
+        else if (color != null && color.equals("BLACK")) {
+            username = newGame.blackUsername();
+            statement = "INSERT INTO gameData (id, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        }
+
+        ChessGame game = newGame.game();
+        var gameJson = new Gson().toJson(game);
+        executeUpdate(statement, String.valueOf(newGame.gameID()), username, newGame.gameName(), gameJson);
     }
 
     @Override
@@ -81,7 +72,7 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
             var statement = "SELECT id, whiteUsername, blackUsername, gameName, game FROM gameData";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
-                    if (rs.next()) {
+                    while (rs.next()) {
                         games.add(readGame(rs));
                     }
                 }
@@ -107,7 +98,7 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  gameData (
-              `id` int NOT NULL,
+              `id` int NOT NULL AUTO_INCREMENT,
               `whiteUsername` varchar(256) DEFAULT NULL,
               `blackUsername` varchar(256) DEFAULT NULL,
               `gameName` varchar(256) NOT NULL,
@@ -125,6 +116,40 @@ public class MySqlGameDAO implements GameDAO, DAOSupport {
         var gameName = rs.getString("gameName");
         var json = rs.getString("game");
         return new GameData (gameID,whiteUsername,blackUsername,gameName,(gson.fromJson(json, ChessGame.class)));
+    }
+
+    private GameData getGameData(int gameID) throws DataAccessException {
+        GameData game = null;
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT id, whiteUsername, blackUsername, gameName, game FROM gameData WHERE id=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, String.valueOf(gameID));
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        game = readGame(rs);
+                        return game;
+                    }
+                    throw new DataAccessException("Game not found for ID: " + gameID);
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException("Could not retrieve gameData");
+        }
+    }
+
+    public void removeGameData(int id) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "DELETE FROM gameData WHERE id=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, id);
+                int rowsRemoved = ps.executeUpdate();
+                if (rowsRemoved == 0) {
+                    throw new DataAccessException("Could not remove gameData");
+                }
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Could Not Delete gameData");
+        }
     }
 
 }

@@ -29,12 +29,12 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public boolean addPlayer(String color, int gameID, String authToken) {
+    public boolean addPlayer(String color, int gameID, String authToken, String username) {
         if (db.getGameData().containsKey(String.valueOf(gameID))) {
             GameData oldGameData = db.getGameData().get(String.valueOf(gameID));
             GameData newGameData;
             System.out.println("oldGameData: " + oldGameData + "\n");
-            String username = db.getAuthData().get(authToken).username();
+            username = db.getAuthData().get(authToken).username();
             if (color != null && color.equals("WHITE") && oldGameData.whiteUsername() == null) {
                 newGameData = new GameData(oldGameData.gameID(), username, oldGameData.blackUsername(), oldGameData.gameName(), oldGameData.game());
             } else if (color != null && color.equals("BLACK") && oldGameData.blackUsername() == null) {
