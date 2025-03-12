@@ -11,7 +11,7 @@ public class GameService {
     MySqlGameDAO gameDAO = new MySqlGameDAO();
     MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
-    public GameService() throws DataAccessException {
+    public GameService(){
     }
 
     public int createGame(String authToken, CreateGameRequest createRequest) throws DataAccessException {

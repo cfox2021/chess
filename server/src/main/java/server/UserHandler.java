@@ -12,7 +12,7 @@ public class UserHandler {
 
     UserService userService;
 
-    public UserHandler() throws DataAccessException {
+    public UserHandler() {
         userService = new UserService();
     }
 

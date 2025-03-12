@@ -13,8 +13,13 @@ import static java.sql.Types.NULL;
 
 public class MySqlUserDAO implements UserDAO, DAOSupport{
 
-    public MySqlUserDAO() throws DataAccessException {
-        configureDatabase(createStatements);
+    public MySqlUserDAO(){
+        try{
+            configureDatabase(createStatements);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

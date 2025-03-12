@@ -14,8 +14,13 @@ import java.util.Objects;
 
 public class MySqlGameDAO implements GameDAO, DAOSupport {
 
-    public MySqlGameDAO() throws DataAccessException {
-        configureDatabase(createStatements);
+    public MySqlGameDAO(){
+        try{
+            configureDatabase(createStatements);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ public class UserService {
     MySqlUserDAO userDAO;
     MySqlAuthDAO authDAO;
 
-    public UserService() throws DataAccessException {
+    public UserService(){
         userDAO = new MySqlUserDAO();
         authDAO = new MySqlAuthDAO();
     }

@@ -9,7 +9,7 @@ public class Server {
     private final UserHandler userHandler = new UserHandler();
     private final GameHandler gameHandler = new GameHandler();
 
-    public Server() throws DataAccessException {
+    public Server() {
     }
 
     public int run(int desiredPort) {

@@ -9,8 +9,13 @@ import java.sql.SQLException;
 public class MySqlAuthDAO implements AuthDAO, DAOSupport{
 
 
-    public MySqlAuthDAO() throws DataAccessException {
-        configureDatabase(createStatements);
+    public MySqlAuthDAO()  {
+        try{
+            configureDatabase(createStatements);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
