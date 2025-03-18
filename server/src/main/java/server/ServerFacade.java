@@ -4,6 +4,8 @@ import dataaccess.DataAccessException;
 import java.io.*;
 import java.net.*;
 import com.google.gson.Gson;
+import service.LoginRequest;
+import service.LoginResult;
 
 
 public class ServerFacade {
@@ -14,8 +16,10 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public void login(){
-
+    public LoginResult login(String username, String password) throws DataAccessException {
+        var path = "/session";
+        var request = new LoginRequest(username, password);
+        return this.makeRequest("POST", path, request, LoginResult.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException {
