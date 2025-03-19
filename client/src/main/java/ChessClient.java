@@ -74,9 +74,15 @@ public class ChessClient {
         }
     }
 
-    public void logout() {
-        server.logout(authToken);
-
+    public String logout() {
+        try {
+            server.logout(authToken);
+            state = State.SIGNEDOUT;
+            return "You have successfully logged out.";
+        }
+        catch(DataAccessException ex){
+            return ex.getMessage();
+        }
     }
 
     public String help() {
