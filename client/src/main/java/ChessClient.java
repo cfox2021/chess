@@ -1,5 +1,6 @@
 import dataaccess.DataAccessException;
 import server.ServerFacade;
+import service.LoginResult;
 
 import java.util.Arrays;
 
@@ -28,6 +29,8 @@ public class ChessClient {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "login", "l" -> login(params);
+                case "logout" -> logout(params);
+                case "register", "r" -> register(params);
                 case "quit", "q" -> "quit";
                 default -> help();
             };
@@ -39,10 +42,11 @@ public class ChessClient {
     public String login(String... params) throws DataAccessException {
         try{
             if (params.length == 2) {
-                state = State.SIGNEDIN;
                 username = params[0];
                 String password = params[1];
-                server.login(username, password);
+                LoginResult result = server.login(username, password);
+                state = State.SIGNEDIN;
+                authToken = result.authToken();
                 return String.format("You signed in as %s.", username);
             }
             throw new DataAccessException("Could Not login - Incorrect number of parameters.");
@@ -52,20 +56,27 @@ public class ChessClient {
         }
     }
 
-    public String logout(String... params) throws DataAccessException {
+    public String register(String... params) throws DataAccessException {
         try{
-            if (params.length == 2) {
-                state = State.SIGNEDIN;
+            if (params.length == 3) {
                 username = params[0];
                 String password = params[1];
-                server.login(username, password);
-                return String.format("You signed in as %s.", username);
+                String email = params[2];
+                LoginResult result = server.register(username, password, email);
+                state = State.SIGNEDIN;
+                authToken = result.authToken();
+                return String.format("You registered and signed in as %s.", username);
             }
-            throw new DataAccessException("Could Not login - Incorrect number of parameters.");
+            throw new DataAccessException("Could Not register - Incorrect number of parameters.");
         }
         catch (DataAccessException ex) {
             return ex.getMessage();
         }
+    }
+
+    public void logout() {
+        server.logout(authToken);
+
     }
 
     public String help() {
