@@ -29,7 +29,7 @@ public class ChessClient {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "login", "l" -> login(params);
-                case "logout" -> logout(params);
+                case "logout" -> logout();
                 case "register", "r" -> register(params);
                 case "quit", "q" -> "quit";
                 default -> help();
@@ -83,6 +83,18 @@ public class ChessClient {
         catch(DataAccessException ex){
             return ex.getMessage();
         }
+    }
+
+    public String quit(){
+        return "";
+    }
+
+    public String watchGame(){
+        return "";
+    }
+
+    public String createGame(){
+        return "";
     }
 
     public String help() {

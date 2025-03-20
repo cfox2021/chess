@@ -6,6 +6,8 @@ import java.net.*;
 import com.google.gson.Gson;
 import service.LoginRequest;
 import service.LoginResult;
+import service.LogoutRequest;
+import service.RegisterRequest;
 
 
 public class ServerFacade {
@@ -20,6 +22,18 @@ public class ServerFacade {
         var path = "/session";
         var request = new LoginRequest(username, password);
         return this.makeRequest("POST", path, request, LoginResult.class);
+    }
+
+    public LoginResult register(String username, String password, String email) throws DataAccessException {
+        var path = "/user";
+        var request = new RegisterRequest(username, password, email);
+        return this.makeRequest("POST", path, request, LoginResult.class);
+    }
+
+    public void logout(String authToken) throws DataAccessException {
+        var path = "/session";
+        var request = new LogoutRequest(authToken);
+        this.makeRequest("DELETE", path, request, LoginResult.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException {
