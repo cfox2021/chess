@@ -54,6 +54,7 @@ public class ServerFacade {
 
     public void joinGame(int gameID, String color, String authToken) throws DataAccessException {
         var path = "/game";
+        color = color.toUpperCase();
         var request = new JoinGameRequest(color, gameID);
         this.makeRequest("PUT", path, request, null, authToken);
     }
