@@ -40,15 +40,22 @@ public class ServerFacade {
     public int createGame(String gameName, String authToken) throws DataAccessException {
         var path = "/game";
         var request = new CreateGameRequest(gameName);
-        return this.makeRequest("POST", path, request, Integer.class, authToken);
+        record CreateGameResult(int gameID) {}
+        CreateGameResult result = this.makeRequest("POST", path, request, CreateGameResult.class, authToken);
+        return result.gameID;
     }
 
     public GameData[] listGames(String authToken) throws DataAccessException {
         var path = "/game";
-        record ListGamesResult(GameData[] gameList) {
-        }
+        record ListGamesResult(GameData[] games) {}
         ListGamesResult result = this.makeRequest("GET", path, null, ListGamesResult.class, authToken);
-        return result.gameList;
+        return result.games;
+    }
+
+    public void joinGame(int gameID, String color, String authToken) throws DataAccessException {
+        var path = "/game";
+        var request = new JoinGameRequest(color, gameID);
+        this.makeRequest("PUT", path, request, null, authToken);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws DataAccessException {
@@ -101,11 +108,11 @@ public class ServerFacade {
         if (!isSuccessful(status)) {
             try (InputStream respErr = http.getErrorStream()) {
                 if (respErr != null) {
-                    throw new DataAccessException("Whoops");
+                    throw new DataAccessException("Status is unsuccessful: " + status);
                 }
             }
 
-            throw new DataAccessException("Whoops");
+            throw new DataAccessException("Status was not unsuccessful: " + status);
         }
     }
 

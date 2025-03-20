@@ -1,10 +1,11 @@
+package client;
+
 import dataaccess.DataAccessException;
 import model.GameData;
 import server.ServerFacade;
 import service.LoginResult;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 public class ChessClient {
 
@@ -13,6 +14,7 @@ public class ChessClient {
     private String username;
     private String authToken;
     private State state = State.SIGNEDOUT;
+    private GameData[] games;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -29,14 +31,23 @@ public class ChessClient {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            if(state.equals(State.SIGNEDOUT)) {
+                return switch (cmd) {
+                    case "login", "l" -> login(params);
+                    case "register", "r" -> register(params);
+                    case "quit", "q" -> quit();
+                    default -> help();
+                };
+            }
             return switch (cmd) {
-                case "login", "l" -> login(params);
                 case "logout" -> logout();
-                case "register", "r" -> register(params);
                 case "quit", "q" -> quit();
                 case "create", "c" -> createGame(params);
+                case "list", "l" -> listGames();
+                case "join", "j" -> joinGame(params);
                 default -> help();
             };
+
         } catch (DataAccessException ex) {
             return ex.getMessage();
         }
@@ -102,7 +113,7 @@ public class ChessClient {
             if (params.length == 1) {
                 String gameName = params[0];
                 int result = server.createGame(gameName, authToken);
-                return (gameName + " successfully created. GameID: " + result);
+                return (gameName + " successfully created.");
             }
             throw new DataAccessException("Could Not create game - Incorrect number of parameters.");
         }
@@ -113,17 +124,36 @@ public class ChessClient {
 
     public String listGames() {
         try {
-            GameData[] games = server.listGames(authToken);
+            games = server.listGames(authToken);
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < games.length; i++) {
-                result.append(i).append(": ");
+                result.append(i + 1).append(": ");
                 result.append("Game Name: ").append(games[i].gameName()).append(",   ");
                 result.append("White: ").append(games[i].whiteUsername()).append(",   ");
                 result.append("Black: ").append(games[i].blackUsername()).append("\n");
             }
 
             return result.toString();
+        }
+        catch(DataAccessException ex){
+            return ex.getMessage();
+        }
+    }
+
+    public String joinGame(String... params){
+        try {
+            if (games == null){
+                games = server.listGames(authToken);
+            }
+            if (params.length == 2) {
+                int gameNum = games[Integer.parseInt(params[0])].gameID();
+                String color = params[1];
+
+                server.joinGame(gameNum, color, authToken);
+                return ("Successfully joined game as " + color + ".");
+            }
+            throw new DataAccessException("Could Not create game - Incorrect number of parameters.");
         }
         catch(DataAccessException ex){
             return ex.getMessage();
