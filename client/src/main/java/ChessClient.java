@@ -31,7 +31,8 @@ public class ChessClient {
                 case "login", "l" -> login(params);
                 case "logout" -> logout();
                 case "register", "r" -> register(params);
-                case "quit", "q" -> "quit";
+                case "quit", "q" -> quit();
+                case "create", "c" -> createGame(params);
                 default -> help();
             };
         } catch (DataAccessException ex) {
@@ -86,6 +87,7 @@ public class ChessClient {
     }
 
     public String quit(){
+        System.exit(0);
         return "";
     }
 
@@ -93,11 +95,21 @@ public class ChessClient {
         return "";
     }
 
-    public String createGame(){
-        return "";
+    public String createGame(String... params) {
+        try {
+            if (params.length == 1) {
+                String gameName = params[0];
+                int result = server.createGame(gameName, authToken);
+                return (gameName + " successfully created. GameID: " + result);
+            }
+            throw new DataAccessException("Could Not create game - Incorrect number of parameters.");
+        }
+        catch(DataAccessException ex){
+                return ex.getMessage();
+            }
     }
 
-    public String help() {
+        public String help() {
         if (state == State.SIGNEDOUT) {
             return """
                     Options:
