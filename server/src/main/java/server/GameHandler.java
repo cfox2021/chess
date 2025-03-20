@@ -43,7 +43,7 @@ public class GameHandler {
         Gson gson = new Gson();
         String authToken = req.headers("authorization");
         try {
-            Collection<GameData> games = gameService.listGames(authToken);
+            GameData[] games = gameService.listGames(authToken).toArray(new GameData[0]);
             res.status(200);
             return gson.toJson(Map.of("games", games));
         } catch (DataAccessException e) {

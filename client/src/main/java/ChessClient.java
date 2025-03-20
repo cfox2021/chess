@@ -1,8 +1,10 @@
 import dataaccess.DataAccessException;
+import model.GameData;
 import server.ServerFacade;
 import service.LoginResult;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 public class ChessClient {
 
@@ -109,26 +111,45 @@ public class ChessClient {
             }
     }
 
-        public String help() {
-        if (state == State.SIGNEDOUT) {
-            return """
-                    Options:
-                    - Login as an existing user: "l", "login" <USERNAME> <PASSWORD>
-                    - Register a new user. "r", "register" <USERNAME> <PASSWORD> <EMAIL>
-                    - Quit the program: "q", "quit"
-                    - Print this message: "h", "help"
-                    
-                    """;
+    public String listGames() {
+        try {
+            GameData[] games = server.listGames(authToken);
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < games.length; i++) {
+                result.append(i).append(": ");
+                result.append("Game Name: ").append(games[i].gameName()).append(",   ");
+                result.append("White: ").append(games[i].whiteUsername()).append(",   ");
+                result.append("Black: ").append(games[i].blackUsername()).append("\n");
+            }
+
+            return result.toString();
         }
+        catch(DataAccessException ex){
+            return ex.getMessage();
+        }
+    }
+
+    public String help() {
+    if (state == State.SIGNEDOUT) {
         return """
                 Options:
-                - List current games: "l", "list"
-                - Create a new game: "c", "create" <GAME NAME>
-                - Join a game: "j", "join" <GAME ID> <COLOR>
-                - Watch a game: "w", "watch" <GAME ID>
-                - Logout: "logout"
+                - Login as an existing user: "l", "login" <USERNAME> <PASSWORD>
+                - Register a new user. "r", "register" <USERNAME> <PASSWORD> <EMAIL>
+                - Quit the program: "q", "quit"
+                - Print this message: "h", "help"
                 
                 """;
+    }
+    return """
+            Options:
+            - List current games: "l", "list"
+            - Create a new game: "c", "create" <GAME NAME>
+            - Join a game: "j", "join" <GAME ID> <COLOR>
+            - Watch a game: "w", "watch" <GAME ID>
+            - Logout: "logout"
+            
+            """;
     }
 
 }

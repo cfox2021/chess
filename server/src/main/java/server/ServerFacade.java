@@ -1,9 +1,14 @@
 package server;
 
+import com.google.gson.reflect.TypeToken;
 import dataaccess.DataAccessException;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.*;
+import java.util.Collection;
+
 import com.google.gson.Gson;
+import model.GameData;
 import service.*;
 
 
@@ -36,6 +41,14 @@ public class ServerFacade {
         var path = "/game";
         var request = new CreateGameRequest(gameName);
         return this.makeRequest("POST", path, request, Integer.class, authToken);
+    }
+
+    public GameData[] listGames(String authToken) throws DataAccessException {
+        var path = "/game";
+        record ListGamesResult(GameData[] gameList) {
+        }
+        ListGamesResult result = this.makeRequest("GET", path, null, ListGamesResult.class, authToken);
+        return result.gameList;
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws DataAccessException {
