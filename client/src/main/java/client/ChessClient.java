@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.GameData;
 import server.ServerFacade;
@@ -15,10 +16,15 @@ public class ChessClient {
     private String authToken;
     private State state = State.SIGNEDOUT;
     private GameData[] games;
+    private int currentGameNum;
+    private GameData currentGame;
+    private String currentColor;
+    private boolean isGameStarted;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
+        isGameStarted = false;
     }
 
     public enum State {
@@ -147,17 +153,31 @@ public class ChessClient {
                 games = server.listGames(authToken);
             }
             if (params.length == 2) {
-                int gameNum = games[Integer.parseInt(params[0])].gameID();
-                String color = params[1];
+                currentGameNum = games[(Integer.parseInt(params[0]) - 1)].gameID();
+                currentGame = games[(Integer.parseInt(params[0]) - 1)];
+                currentColor = params[1].toLowerCase();
 
-                server.joinGame(gameNum, color, authToken);
-                return ("Successfully joined game as " + color + ".");
+                server.joinGame(currentGameNum, currentColor, authToken);
+                isGameStarted = true;
+                return ("Successfully joined game as " + currentColor + ".");
             }
             throw new DataAccessException("Could Not create game - Incorrect number of parameters.");
         }
         catch(DataAccessException ex){
             return ex.getMessage();
         }
+    }
+
+    public boolean hasjoinedGame(){
+        return isGameStarted;
+    }
+
+    public GameData getGameData(){
+        return currentGame;
+    }
+
+    public String getColor(){
+        return currentColor;
     }
 
     public String help() {
