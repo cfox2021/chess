@@ -96,6 +96,7 @@ public class ChessClient {
         try {
             server.logout(authToken);
             state = State.SIGNEDOUT;
+            isGameStarted = false;
             return "You have successfully logged out.";
         }
         catch(DataAccessException ex){
