@@ -20,6 +20,7 @@ public class ChessClient {
     private GameData currentGame;
     private String currentColor;
     private boolean isGameStarted;
+    private boolean createdNewGame;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -69,7 +70,7 @@ public class ChessClient {
                 authToken = result.authToken();
                 return String.format("You signed in as %s.", username);
             }
-            throw new DataAccessException("Could Not login - Incorrect number of parameters.");
+            throw new DataAccessException("Could Not login, please follow this format:\n\"l\", \"login\" <USERNAME> <PASSWORD>");
         }
         catch (DataAccessException ex) {
             return ex.getMessage();
@@ -87,7 +88,7 @@ public class ChessClient {
                 authToken = result.authToken();
                 return String.format("You registered and signed in as %s.", username);
             }
-            throw new DataAccessException("Could Not register - Incorrect number of parameters.");
+            throw new DataAccessException("Could Not register user. Please follow this format:\n\"r\", \"register\" <USERNAME> <PASSWORD> <EMAIL>");
         }
         catch (DataAccessException ex) {
             return ex.getMessage();
@@ -101,7 +102,7 @@ public class ChessClient {
             return "You have successfully logged out.";
         }
         catch(DataAccessException ex){
-            return ex.getMessage();
+            return "Logout was unsuccessful.";
         }
     }
 
@@ -119,18 +120,24 @@ public class ChessClient {
             if (params.length == 1) {
                 String gameName = params[0];
                 int result = server.createGame(gameName, authToken);
+                createdNewGame = true;
                 return (gameName + " successfully created.");
             }
-            throw new DataAccessException("Could Not create game - Incorrect number of parameters.");
+            throw new DataAccessException("Could Not create game. Please follow this format: Create a new game:\n\"c\", \"create\" <GAME NAME>");
         }
         catch(DataAccessException ex){
-                return ex.getMessage();
+                return "Could Not create game.";
             }
     }
 
     public String listGames() {
         try {
             games = server.listGames(authToken);
+
+            if (games.length == 0) {
+                return "No games found.";
+            }
+
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < games.length; i++) {
@@ -139,17 +146,17 @@ public class ChessClient {
                 result.append("White: ").append(games[i].whiteUsername()).append(",   ");
                 result.append("Black: ").append(games[i].blackUsername()).append("\n");
             }
-
+            createdNewGame = false;
             return result.toString();
         }
         catch(DataAccessException ex){
-            return ex.getMessage();
+            return "Unable to print games list.";
         }
     }
 
     public String joinGame(String... params){
         try {
-            if (games == null){
+            if (games == null || createdNewGame) {
                 games = server.listGames(authToken);
             }
             if (params.length == 2) {
@@ -161,10 +168,10 @@ public class ChessClient {
                 isGameStarted = true;
                 return ("Successfully joined game as " + currentColor + ".");
             }
-            throw new DataAccessException("Could Not create game - Incorrect number of parameters.");
+            throw new DataAccessException("Could Not create game, please follow this format:\n\"j\", \"join\" <GAME ID> <COLOR>");
         }
         catch(DataAccessException ex){
-            return ex.getMessage();
+            return "Unable to join game.";
         }
     }
 
