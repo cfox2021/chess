@@ -81,37 +81,8 @@ public class Repl {
 
                     ChessPiece piece = board.getPiece(new ChessPosition(boardRow, boardCol));
 
-                    if (piece == null) {
-                        boardString.append(EscapeSequences.EMPTY);
-                    } else {
-                        switch (piece.getPieceType()) {
-                            case KING:
-                                boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
-                                        ? EscapeSequences.WHITE_KING : EscapeSequences.BLACK_KING);
-                                break;
-                            case QUEEN:
-                                boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
-                                        ? EscapeSequences.WHITE_QUEEN : EscapeSequences.BLACK_QUEEN);
-                                break;
-                            case BISHOP:
-                                boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
-                                        ? EscapeSequences.WHITE_BISHOP : EscapeSequences.BLACK_BISHOP);
-                                break;
-                            case KNIGHT:
-                                boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
-                                        ? EscapeSequences.WHITE_KNIGHT : EscapeSequences.BLACK_KNIGHT);
-                                break;
-                            case ROOK:
-                                boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
-                                        ? EscapeSequences.WHITE_ROOK : EscapeSequences.BLACK_ROOK);
-                                break;
-                            case PAWN:
-                                boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
-                                        ? EscapeSequences.WHITE_PAWN : EscapeSequences.BLACK_PAWN);
-                                break;
-                        }
-                    }
-                    
+                    printSpacePiece(piece, boardString);
+
                     isWhiteSpace = !isWhiteSpace;
                 }
                 boardString.append(EscapeSequences.RESET_BG_COLOR).append("\n");
@@ -120,6 +91,39 @@ public class Repl {
             System.out.println(boardString);
         }
         System.out.print("\n" + EscapeSequences.RESET_TEXT_COLOR + ">>> " + EscapeSequences.SET_TEXT_COLOR_GREEN);
+    }
+
+    private static void printSpacePiece(ChessPiece piece, StringBuilder boardString) {
+        if (piece == null) {
+            boardString.append(EscapeSequences.EMPTY);
+        } else {
+            switch (piece.getPieceType()) {
+                case KING:
+                    boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.WHITE_KING : EscapeSequences.BLACK_KING);
+                    break;
+                case QUEEN:
+                    boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.WHITE_QUEEN : EscapeSequences.BLACK_QUEEN);
+                    break;
+                case BISHOP:
+                    boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.WHITE_BISHOP : EscapeSequences.BLACK_BISHOP);
+                    break;
+                case KNIGHT:
+                    boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.WHITE_KNIGHT : EscapeSequences.BLACK_KNIGHT);
+                    break;
+                case ROOK:
+                    boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.WHITE_ROOK : EscapeSequences.BLACK_ROOK);
+                    break;
+                case PAWN:
+                    boardString.append(piece.getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.WHITE_PAWN : EscapeSequences.BLACK_PAWN);
+                    break;
+            }
+        }
     }
 
 }

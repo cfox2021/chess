@@ -109,31 +109,31 @@ public class ServerFacade {
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
             try (InputStream respErr = http.getErrorStream()) {
-                if (respErr != null) {
-                    switch (path) {
-                        case "/game":
-                            if (method.equals("PUT")) {
-                                throw new DataAccessException("Color already taken");
-                            }
-                            if (method.equals("POST")) {
-                                throw new DataAccessException("Trouble creating game. Please try again.");
-                            }
-                            if (method.equals("GET")) {
-                                throw new DataAccessException("Could not list games. Please try again.");
-                            }
-                        case "/user":
-                            throw new DataAccessException("Username already taken");
-                        case "/session":
-                            if (method.equals("POST")) {
-                                throw new DataAccessException("Username or Password incorrect");
-                            }
-
-
-                    }
-                }
+                printError(method, path, respErr);
             }
 
             throw new DataAccessException("Status was not unsuccessful: " + status);
+        }
+    }
+
+    private static void printError(String method, String path, InputStream respErr) throws DataAccessException {
+        if (respErr != null) {
+            switch (path) {
+                case "/game":
+                    switch (method) {
+                        case "PUT" -> throw new DataAccessException("Color already taken");
+                        case "POST" -> throw new DataAccessException("Trouble creating game. Please try again.");
+                        case "GET" -> throw new DataAccessException("Could not list games. Please try again.");
+                    }
+                case "/user":
+                    throw new DataAccessException("Username already taken");
+                case "/session":
+                    if (method.equals("POST")) {
+                        throw new DataAccessException("Username or Password incorrect");
+                    }
+
+
+            }
         }
     }
 
