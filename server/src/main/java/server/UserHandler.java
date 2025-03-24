@@ -3,8 +3,11 @@ package server;
 import com.google.gson.JsonObject;
 import chess.DataAccessException;
 import com.google.gson.Gson;
+import requestResult.LoginRequest;
+import requestResult.LoginResult;
+import requestResult.LogoutRequest;
+import requestResult.RegisterRequest;
 import service.UserService;
-import shared.*;
 import spark.*;
 
 import java.util.Map;

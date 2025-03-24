@@ -5,7 +5,10 @@ import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import shared.*;
+import requestResult.LoginRequest;
+import requestResult.LoginResult;
+import requestResult.LogoutRequest;
+import requestResult.RegisterRequest;
 
 public class UserServiceTest {
 

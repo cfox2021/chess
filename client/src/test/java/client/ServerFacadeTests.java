@@ -5,7 +5,7 @@ import chess.DataAccessException;
 import model.GameData;
 import org.junit.jupiter.api.*;
 import server.Server;
-import shared.LoginResult;
+import requestResult.LoginResult;
 
 
 public class ServerFacadeTests {

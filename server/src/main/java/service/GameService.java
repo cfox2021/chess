@@ -4,8 +4,8 @@ import chess.DataAccessException;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
-import shared.CreateGameRequest;
-import shared.JoinGameRequest;
+import requestResult.CreateGameRequest;
+import requestResult.JoinGameRequest;
 
 import java.util.Collection;
 
