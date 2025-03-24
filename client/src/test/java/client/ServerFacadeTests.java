@@ -22,7 +22,7 @@ public class ServerFacadeTests {
 
     @BeforeEach
     public void before() throws DataAccessException {
-        facade = new ServerFacade("http://localhost:8080");
+        facade = new ServerFacade("http://localhost:0");
         facade.clear();
     }
 
