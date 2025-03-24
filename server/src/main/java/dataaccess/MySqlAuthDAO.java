@@ -1,7 +1,7 @@
 package dataaccess;
 
+import chess.DataAccessException;
 import model.AuthData;
-import model.UserData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

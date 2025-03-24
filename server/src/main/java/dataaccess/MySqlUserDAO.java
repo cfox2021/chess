@@ -1,15 +1,10 @@
 package dataaccess;
 
-import com.google.gson.Gson;
+import chess.DataAccessException;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.sql.*;
-
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
 
 public class MySqlUserDAO implements UserDAO, DAOSupport{
 

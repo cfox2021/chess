@@ -1,14 +1,13 @@
 package server;
 
 import com.google.gson.JsonObject;
-import dataaccess.DataAccessException;
+import chess.DataAccessException;
 import model.GameData;
 import service.*;
 import com.google.gson.Gson;
 import spark.*;
 import service.GameService;
 
-import java.util.Collection;
 import java.util.Map;
 
 public class GameHandler {

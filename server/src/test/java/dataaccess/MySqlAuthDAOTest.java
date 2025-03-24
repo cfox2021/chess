@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.DataAccessException;
 import model.AuthData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

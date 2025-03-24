@@ -1,11 +1,8 @@
 package server;
 
-import com.google.gson.reflect.TypeToken;
-import dataaccess.DataAccessException;
+import chess.DataAccessException;
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.*;
-import java.util.Collection;
 
 import com.google.gson.Gson;
 import model.GameData;

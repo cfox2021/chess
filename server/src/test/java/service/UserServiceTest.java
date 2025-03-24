@@ -1,12 +1,8 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.DataBase;
-import dataaccess.DatabaseManager;
+import chess.DataAccessException;
 import model.UserData;
-import org.eclipse.jetty.security.LoginService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 

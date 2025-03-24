@@ -1,7 +1,7 @@
 package client;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
+import chess.DataAccessException;
 import model.GameData;
 import org.junit.jupiter.api.*;
 import server.Server;

@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.DataAccessException;
 import model.UserData;
 
 

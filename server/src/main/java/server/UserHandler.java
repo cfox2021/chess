@@ -1,7 +1,7 @@
 package server;
 
 import com.google.gson.JsonObject;
-import dataaccess.DataAccessException;
+import chess.DataAccessException;
 import service.*;
 import com.google.gson.Gson;
 import spark.*;
