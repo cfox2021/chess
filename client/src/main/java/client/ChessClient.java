@@ -175,6 +175,10 @@ public class ChessClient {
         }
     }
 
+    public void clear() throws DataAccessException {
+        server.clear();
+    }
+
     public boolean hasjoinedGame(){
         return isGameStarted;
     }
