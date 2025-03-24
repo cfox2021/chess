@@ -2,7 +2,6 @@ package client;
 
 import chess.DataAccessException;
 import model.GameData;
-import service.LoginResult;
 
 import java.util.Arrays;
 
@@ -63,9 +62,8 @@ public class ChessClient {
             if (params.length == 2) {
                 username = params[0];
                 String password = params[1];
-                LoginResult result = server.login(username, password);
+                authToken = server.login(username, password).authToken();
                 state = State.SIGNEDIN;
-                authToken = result.authToken();
                 return String.format("You signed in as %s.", username);
             }
             throw new DataAccessException("Could Not login, please follow this format:\n\"l\", \"login\" <USERNAME> <PASSWORD>");
@@ -81,9 +79,8 @@ public class ChessClient {
                 username = params[0];
                 String password = params[1];
                 String email = params[2];
-                LoginResult result = server.register(username, password, email);
+                authToken = server.register(username, password, email).authToken();
                 state = State.SIGNEDIN;
-                authToken = result.authToken();
                 return String.format("You registered and signed in as %s.", username);
             }
             throw new DataAccessException("Could Not register user. Please follow this format:\n\"r\", \"register\" <USERNAME> <PASSWORD> <EMAIL>");
