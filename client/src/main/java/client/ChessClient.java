@@ -2,7 +2,6 @@ package client;
 
 import chess.DataAccessException;
 import model.GameData;
-import server.ServerFacade;
 import service.LoginResult;
 
 import java.util.Arrays;

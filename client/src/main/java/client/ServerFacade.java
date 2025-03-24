@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import chess.DataAccessException;
 import java.io.*;
