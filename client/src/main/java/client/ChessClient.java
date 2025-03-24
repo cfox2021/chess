@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import chess.DataAccessException;
 import model.GameData;
 
@@ -49,6 +50,7 @@ public class ChessClient {
                 case "create", "c" -> createGame(params);
                 case "list", "l" -> listGames();
                 case "join", "j" -> joinGame(params);
+                case "watch", "w" -> watchGame();
                 default -> help();
             };
 
@@ -107,6 +109,9 @@ public class ChessClient {
     }
 
     public String watchGame(){
+        isGameStarted = true;
+        currentColor = "WHITE";
+        currentGame = new GameData(1, null, null, "game", new ChessGame());
         return "";
     }
 

@@ -5,10 +5,10 @@ import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import requestResult.LoginRequest;
-import requestResult.LoginResult;
-import requestResult.LogoutRequest;
-import requestResult.RegisterRequest;
+import requestresult.LoginRequest;
+import requestresult.LoginResult;
+import requestresult.LogoutRequest;
+import requestresult.RegisterRequest;
 
 import java.util.UUID;
 

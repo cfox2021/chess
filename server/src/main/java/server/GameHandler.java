@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import chess.DataAccessException;
 import model.GameData;
 import com.google.gson.Gson;
-import requestResult.CreateGameRequest;
-import requestResult.JoinGameRequest;
+import requestresult.CreateGameRequest;
+import requestresult.JoinGameRequest;
 import spark.*;
 import service.GameService;
 

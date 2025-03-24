@@ -3,10 +3,10 @@ package server;
 import com.google.gson.JsonObject;
 import chess.DataAccessException;
 import com.google.gson.Gson;
-import requestResult.LoginRequest;
-import requestResult.LoginResult;
-import requestResult.LogoutRequest;
-import requestResult.RegisterRequest;
+import requestresult.LoginRequest;
+import requestresult.LoginResult;
+import requestresult.LogoutRequest;
+import requestresult.RegisterRequest;
 import service.UserService;
 import spark.*;
 
