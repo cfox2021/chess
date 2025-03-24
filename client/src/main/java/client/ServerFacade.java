@@ -6,7 +6,7 @@ import java.net.*;
 
 import com.google.gson.Gson;
 import model.GameData;
-import service.*;
+import shared.*;
 
 
 public class ServerFacade {

@@ -2,8 +2,9 @@ package server;
 
 import com.google.gson.JsonObject;
 import chess.DataAccessException;
-import service.*;
 import com.google.gson.Gson;
+import service.UserService;
+import shared.*;
 import spark.*;
 
 import java.util.Map;

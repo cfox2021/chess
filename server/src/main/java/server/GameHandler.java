@@ -3,8 +3,9 @@ package server;
 import com.google.gson.JsonObject;
 import chess.DataAccessException;
 import model.GameData;
-import service.*;
 import com.google.gson.Gson;
+import shared.CreateGameRequest;
+import shared.JoinGameRequest;
 import spark.*;
 import service.GameService;
 
