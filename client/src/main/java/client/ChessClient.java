@@ -171,7 +171,7 @@ public class ChessClient {
             }
             throw new DataAccessException("Could Not create game, please follow this format:\n\"j\", \"join\" <GAME ID> <COLOR>");
         }
-        catch(DataAccessException ex){
+        catch(DataAccessException | ArrayIndexOutOfBoundsException ex){
             return "Unable to join game.";
         }
     }
